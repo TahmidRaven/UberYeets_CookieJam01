@@ -1,0 +1,37 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/car.tscn" id="1_car"]
+[ext_resource type="Script" path="res://scripts/track_generator.gd" id="2_trackgen"]
+[ext_resource type="PackedScene" path="res://prefabs/road_tile.tscn" id="3_roadtile"]
+[ext_resource type="PackedScene" path="res://prefabs/roundabout_tile.tscn" id="4_roundabouttile"]
+[ext_resource type="Script" path="res://scripts/objective_manager.gd" id="5_objmgr"]
+[ext_resource type="PackedScene" path="res://prefabs/objective_point.tscn" id="6_objpoint"]
+[ext_resource type="PackedScene" path="res://scenes/hud.tscn" id="7_hud"]
+
+[node name="Main" type="Node3D"]
+
+[node name="Car" parent="." instance=ExtResource("1_car")]
+
+[node name="TrackGenerator" type="Node3D" parent="."]
+script = ExtResource("2_trackgen")
+road_tile_scene = ExtResource("3_roadtile")
+roundabout_tile_scene = ExtResource("4_roundabouttile")
+car_path = NodePath("../Car")
+
+[node name="ObjectiveManager" type="Node" parent="."]
+script = ExtResource("5_objmgr")
+pickup_point = NodePath("../PickupPoint")
+dropoff_point = NodePath("../DropoffPoint")
+track_generator_path = NodePath("../TrackGenerator")
+
+[node name="PickupPoint" parent="." instance=ExtResource("6_objpoint")]
+kind = "Pickup"
+require_action = ""
+beacon_color = Color(0.2, 1, 0.3, 1)
+
+[node name="DropoffPoint" parent="." instance=ExtResource("6_objpoint")]
+kind = "Dropoff"
+require_action = "yeet"
+beacon_color = Color(1, 0.6, 0.1, 1)
+
+[node name="HUD" parent="." instance=ExtResource("7_hud")]

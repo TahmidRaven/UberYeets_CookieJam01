@@ -1,0 +1,12 @@
+78098b89c88a74ebe8c20117b8754620
+::res://::1785355785
+icon.svg::CompressedTexture2D::1542847396688936692::1785355756::1785355761::1::::<><><>0<>0<>fa5c3750c8e10a5c12d24a39dd031a78<>res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex::
+::res://models/::1785355804
+car.glb::PackedScene::7323367223903623215::1785350928::1785355818::1::::<><><>0<>0<>8b5d566cd66f052384d4d91f23ba0519<>res://.godot/imported/car.glb-6d45222c70795b114333c5c84f1bce6b.scn::
+roundabout_city_tex_1.png::CompressedTexture2D::5495356872560316126::1785355818::1785355820::1::::<><><>0<>0<>c69253200773120c2c662a23f9eef051<>res://.godot/imported/roundabout_city_tex_1.png-2cfac8d3e81639df87a4dcce2efdf8c9.s3tc.ctex::
+roundabout_bricks.png::CompressedTexture2D::5072107925960921224::1785355818::1785355820::1::::<><><>0<>0<>5892fe52f2d69b6dc2a31f6ab551a46c<>res://.godot/imported/roundabout_bricks.png-6512edce1669deee84c101844d091b5c.s3tc.ctex::
+road_city_tex_1.png::CompressedTexture2D::2144017594213272152::1785355818::1785355820::1::::<><><>0<>0<>eacfdb60cdcc4b48945472e668e9cd3a<>res://.godot/imported/road_city_tex_1.png-febe199b045aad448ccb1c11e75fa470.s3tc.ctex::
+road_bricks.png::CompressedTexture2D::5008057650297918671::1785355818::1785355820::1::::<><><>0<>0<>8d28ceb708f4f2a4ed886a01b15d07d6<>res://.godot/imported/road_bricks.png-8d50688838c96f80633ca4fac5e720fb.s3tc.ctex::
+road.glb::PackedScene::2062344303807844348::1785350918::1785355818::1::::<><><>0<>0<>03138ea2e87c62df9de2ea086519f80f<>res://.godot/imported/road.glb-bf83f2f49b2718317c1db6bfe3335684.scn::uid://cdl68imac54nr::::res://models/road_bricks.png<>uid://5stwk7lc1xqm::::res://models/road_city_tex_1.png
+roundabout.glb::PackedScene::6911493317183072468::1785350922::1785355819::1::::<><><>0<>0<>8f85539b45891399f491319c6f6dd1c6<>res://.godot/imported/roundabout.glb-4b8421441f425e54957640132d0bd87c.scn::uid://cei742h2utybo::::res://models/roundabout_bricks.png<>uid://ckj8yv454s6pe::::res://models/roundabout_city_tex_1.png
+::res://scenes/::1785355770
