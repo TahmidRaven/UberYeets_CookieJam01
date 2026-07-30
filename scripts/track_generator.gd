@@ -120,6 +120,9 @@ func get_chunk_transforms() -> Array[Transform3D]:
 func get_chunk_extents() -> Array[float]:
 	return _chunk_extents
 
+func get_chunk_min_x() -> Array[float]:
+	return _chunk_min_x
+
 func get_chunk_is_roundabout() -> Array[bool]:
 	return _chunk_is_intersection
 

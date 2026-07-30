@@ -76,10 +76,9 @@ script = ExtResource("5_objmgr")
 pickup_point = NodePath("../PickupPoint")
 dropoff_point = NodePath("../DropoffPoint")
 track_generator_path = NodePath("../TrackGenerator")
-pickup_node_path = NodePath("../TrackGenerator/A")
-dropoff_node_path = NodePath("../TrackGenerator/I")
 
 [node name="PickupPoint" parent="." unique_id=1744686692 instance=ExtResource("6_objpoint")]
+require_action = "yeet"
 beacon_color = Color(0.2, 1, 0.3, 1)
 
 [node name="DropoffPoint" parent="." unique_id=72744603 instance=ExtResource("6_objpoint")]

@@ -1,53 +1,46 @@
 extends Node
 
-enum State { INTRO, PANIC, DRIVING }
-
 @export_category("Messages")
-@export var panic_prompt_text := "PRESS SPACE TO BRAKE!"
-@export var panic_reveal_text := "THE BRAKES AREN'T WORKING!!"
-@export var brakes_back_text := "...brakes are back. Find your fare!"
+@export var brakes_failing_again_text := "Brakes are failing again! Space guns it now!"
+@export var brakes_fixed_for_good_text := "All deliveries done - brakes are fixed for good!"
 
 @export_category("Timing")
-@export var panic_duration := 6.0
+@export var working_duration := 3.0
 
-signal state_changed(new_state: State)
 signal message_changed(text: String)
 
-var state: State = State.INTRO
 var car: Node = null
+var _timer: Timer
 
 func _ready():
-	var timer := Timer.new()
-	timer.name = "PanicTimer"
-	timer.one_shot = true
-	timer.wait_time = panic_duration
-	add_child(timer)
-	timer.timeout.connect(_on_panic_timer_timeout)
+	_timer = Timer.new()
+	_timer.one_shot = true
+	add_child(_timer)
+	_timer.timeout.connect(_on_working_timeout)
 
 	call_deferred("_bind_car")
-	_set_message(panic_prompt_text)
 
 func _bind_car():
 	car = get_tree().get_first_node_in_group("car")
 	if car:
-		car.panic_pressed.connect(_on_car_panic_pressed)
+		car.brakes_enabled = false
+		car.space_accelerates = false
 
-func _on_car_panic_pressed():
-	if state != State.INTRO:
-		return
-	_set_state(State.PANIC)
-	_set_message(panic_reveal_text)
-	$PanicTimer.start(panic_duration)
-
-func _on_panic_timer_timeout():
+func start_temporary_brakes(duration: float = working_duration):
 	if car:
 		car.brakes_enabled = true
-	_set_state(State.DRIVING)
-	_set_message(brakes_back_text)
+		car.space_accelerates = false
+	_timer.start(duration)
 
-func _set_state(new_state: State):
-	state = new_state
-	state_changed.emit(state)
+func set_brakes_permanently_working():
+	if car:
+		car.brakes_enabled = true
+		car.space_accelerates = false
+	_timer.stop()
+	message_changed.emit(brakes_fixed_for_good_text)
 
-func _set_message(text: String):
-	message_changed.emit(text)
+func _on_working_timeout():
+	if car:
+		car.brakes_enabled = false
+		car.space_accelerates = true
+	message_changed.emit(brakes_failing_again_text)

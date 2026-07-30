@@ -9,6 +9,7 @@ extends CharacterBody3D
 @export var auto_accelerate := true
 @export var brakes_enabled := false
 @export var brake_strength := 60.0
+@export var space_accelerates := false
 
 @export_category("Cornering")
 @export_range(0.0, 1.0) var turn_speed_factor := 0.4
@@ -28,7 +29,9 @@ func _physics_process(delta):
 
 	velocity += transform.basis.x * accel * delta
 
-	if brakes_enabled and Input.is_action_pressed("panic"):
+	if space_accelerates and Input.is_action_pressed("panic"):
+		velocity += transform.basis.x * acceleration * delta
+	elif brakes_enabled and Input.is_action_pressed("panic"):
 		velocity = velocity.move_toward(Vector3.ZERO, brake_strength * delta)
 
 	var steer = Input.get_axis("turn_right","turn_left")

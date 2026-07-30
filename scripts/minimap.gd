@@ -82,7 +82,7 @@ func _draw():
 	for node_pos in _node_positions:
 		draw_circle(_world_to_local(node_pos), route_width * 1.5, route_color)
 
-	if _pickup and is_instance_valid(_pickup):
+	if _pickup and is_instance_valid(_pickup) and _pickup.visible:
 		draw_circle(_world_to_local(_pickup.global_position), marker_radius, pickup_color)
 
 	if _dropoff and is_instance_valid(_dropoff) and _dropoff.visible:

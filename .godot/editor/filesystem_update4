@@ -5,3 +5,5 @@ res://scripts/building_scatterer.gd
 res://scripts/minimap.gd
 res://scripts/objective_manager.gd
 res://scenes/main.tscn
+res://scripts/car.gd
+res://scripts/game_manager.gd
