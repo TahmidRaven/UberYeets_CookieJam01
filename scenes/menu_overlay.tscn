@@ -1,0 +1,119 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/menu_overlay.gd" id="1_script"]
+[ext_resource type="Shader" path="res://shaders/menu_retro.gdshader" id="2_shader"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_retro"]
+shader = ExtResource("2_shader")
+
+[node name="MenuOverlay" type="CanvasLayer"]
+layer = 20
+script = ExtResource("1_script")
+
+[node name="Background" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_retro")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="MainPanel" type="CenterContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainPanel"]
+theme_override_constants/separation = 18
+alignment = 1
+
+[node name="Title" type="Label" parent="MainPanel/VBoxContainer"]
+theme_override_font_sizes/font_size = 56
+horizontal_alignment = 1
+text = "UBER YEETS"
+
+[node name="PlayButton" type="Button" parent="MainPanel/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 50)
+theme_override_font_sizes/font_size = 26
+text = "PLAY"
+
+[node name="MainCreditsButton" type="Button" parent="MainPanel/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 50)
+theme_override_font_sizes/font_size = 26
+text = "CREDITS"
+
+[node name="MainExitButton" type="Button" parent="MainPanel/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 50)
+theme_override_font_sizes/font_size = 26
+text = "EXIT"
+
+[node name="PausePanel" type="CenterContainer" parent="."]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PausePanel"]
+theme_override_constants/separation = 18
+alignment = 1
+
+[node name="Title" type="Label" parent="PausePanel/VBoxContainer"]
+theme_override_font_sizes/font_size = 48
+horizontal_alignment = 1
+text = "PAUSED"
+
+[node name="ResumeButton" type="Button" parent="PausePanel/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 50)
+theme_override_font_sizes/font_size = 26
+text = "RESUME"
+
+[node name="PauseCreditsButton" type="Button" parent="PausePanel/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 50)
+theme_override_font_sizes/font_size = 26
+text = "CREDITS"
+
+[node name="PauseExitButton" type="Button" parent="PausePanel/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 50)
+theme_override_font_sizes/font_size = 26
+text = "EXIT"
+
+[node name="CreditsPanel" type="CenterContainer" parent="."]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CreditsPanel"]
+theme_override_constants/separation = 14
+alignment = 1
+
+[node name="Title" type="Label" parent="CreditsPanel/VBoxContainer"]
+theme_override_font_sizes/font_size = 48
+horizontal_alignment = 1
+text = "CREDITS"
+
+[node name="Name1" type="Label" parent="CreditsPanel/VBoxContainer"]
+theme_override_font_sizes/font_size = 32
+horizontal_alignment = 1
+text = "Raven"
+
+[node name="Ampersand" type="Label" parent="CreditsPanel/VBoxContainer"]
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+text = "&"
+
+[node name="Name2" type="Label" parent="CreditsPanel/VBoxContainer"]
+theme_override_font_sizes/font_size = 32
+horizontal_alignment = 1
+text = "DBAC"
+
+[node name="BackButton" type="Button" parent="CreditsPanel/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 50)
+theme_override_font_sizes/font_size = 26
+text = "BACK"

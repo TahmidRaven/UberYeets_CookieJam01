@@ -6,7 +6,6 @@ extends Node
 
 @export_category("Rounds")
 @export var round_count := 5
-@export var beacon_height := 1.0
 @export var rng_seed := 0
 @export var brake_working_duration := 3.0
 
@@ -26,6 +25,7 @@ var _round := 0
 var _road_transforms: Array[Transform3D] = []
 var _road_min_x: Array[float] = []
 var _road_extents: Array[float] = []
+var _landmark_points: Array[Vector3] = []
 var _rng := RandomNumberGenerator.new()
 
 func _ready():
@@ -55,8 +55,9 @@ func _ready():
 
 func _on_route_generated():
 	_cache_road_segments()
+	_pick_fixed_positions()
 	_round = 0
-	_place_round()
+	_start_round()
 	GameManager.message_changed.emit(first_pickup_text % round_count)
 
 func _cache_road_segments():
@@ -75,11 +76,13 @@ func _cache_road_segments():
 			_road_min_x.append(min_x[i])
 			_road_extents.append(extents[i])
 
-func _place_round():
+# Pickup/dropoff (and whatever landmark building rides along with each one)
+# are placed exactly once here and never moved again - rounds just shuttle
+# the player back and forth between these two fixed spots.
+func _pick_fixed_positions():
+	_landmark_points.clear()
 	if _road_transforms.size() < 2:
 		return
-
-	_round += 1
 
 	var pickup_index := _rng.randi_range(0, _road_transforms.size() - 1)
 	var dropoff_index := pickup_index
@@ -88,10 +91,24 @@ func _place_round():
 
 	if _pickup:
 		_pickup.global_transform = _point_on_chunk(pickup_index)
+		_landmark_points.append(_pickup.global_position)
+	if _dropoff:
+		_dropoff.global_transform = _point_on_chunk(dropoff_index)
+		_landmark_points.append(_dropoff.global_position)
+
+func get_landmark_points() -> Array[Vector3]:
+	return _landmark_points
+
+func _start_round():
+	if _road_transforms.size() < 2:
+		return
+
+	_round += 1
+
+	if _pickup:
 		_pickup.visible = true
 		_pickup.monitoring = true
 	if _dropoff:
-		_dropoff.global_transform = _point_on_chunk(dropoff_index)
 		_dropoff.visible = false
 		_dropoff.monitoring = false
 
@@ -100,11 +117,7 @@ func _point_on_chunk(index: int) -> Transform3D:
 	var local_x: float = _road_min_x[index] + frac * _road_extents[index]
 	var chunk_transform: Transform3D = _road_transforms[index]
 	var world_pos: Vector3 = chunk_transform * Vector3(local_x, 0.0, 0.0)
-	return _with_beacon_height(Transform3D(chunk_transform.basis, world_pos))
-
-func _with_beacon_height(t: Transform3D) -> Transform3D:
-	t.origin.y += beacon_height
-	return t
+	return Transform3D(chunk_transform.basis, world_pos)
 
 func _on_pickup_triggered(_point):
 	if _pickup:
@@ -126,4 +139,4 @@ func _on_dropoff_triggered(_point):
 	else:
 		GameManager.start_temporary_brakes(brake_working_duration)
 		GameManager.message_changed.emit(round_complete_text % [_round, round_count, int(brake_working_duration)])
-		_place_round()
+		_start_round()

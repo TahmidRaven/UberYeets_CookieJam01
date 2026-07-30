@@ -9,6 +9,7 @@ const MeshUtils = preload("res://scripts/mesh_utils.gd")
 @export_category("Landmark")
 @export var building_scene: PackedScene
 @export var building_side_offset := 14.0
+@export var building_y_offset := 0.0
 
 signal triggered(point)
 
@@ -37,7 +38,7 @@ func _spawn_building_landmark():
 
 	var side := 1.0 if randf() < 0.5 else -1.0
 	var aabb := MeshUtils.local_aabb(instance)
-	var local_pos := Vector3(0.0, -aabb.position.y, side * (building_side_offset + aabb.size.z * 0.5))
+	var local_pos := Vector3(0.0, -aabb.position.y + building_y_offset, side * (building_side_offset + aabb.size.z * 0.5))
 	instance.transform = Transform3D(Basis.IDENTITY, local_pos)
 
 func _process(_delta):

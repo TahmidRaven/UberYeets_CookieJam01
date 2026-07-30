@@ -21,14 +21,6 @@ vertical_alignment = 1
 autowrap_mode = 2
 text = ""
 
-[node name="CRTToggle" type="CheckBox" parent="."]
-offset_left = 20.0
-offset_top = 10.0
-offset_right = 160.0
-offset_bottom = 34.0
-button_pressed = true
-text = "CRT Shader"
-
 [node name="MiniMap" type="Control" parent="."]
 anchors_preset = 3
 anchor_left = 1.0

@@ -18,6 +18,7 @@
 [ext_resource type="PackedScene" uid="uid://ctaxtufrc2u6c" path="res://models_environment/skybox.glb" id="16_skybox"]
 [ext_resource type="PackedScene" uid="uid://u8t5i51xtlf" path="res://models_environment/sun.glb" id="17_sun"]
 [ext_resource type="Script" uid="uid://byowanjasbx08" path="res://scripts/sky_follow.gd" id="18_skyfollow"]
+[ext_resource type="PackedScene" path="res://scenes/menu_overlay.tscn" id="19_menu"]
 
 [sub_resource type="Environment" id="Environment_1"]
 ambient_light_source = 2
@@ -33,6 +34,7 @@ transform = Transform3D(0.8660254, 0.35355338, -0.35355338, 0, 0.70710677, 0.707
 shadow_enabled = true
 
 [node name="Car" parent="." unique_id=435631804 instance=ExtResource("1_car")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, 0, 0)
 
 [node name="TrackGenerator" type="Node3D" parent="." unique_id=328515916]
 script = ExtResource("2_trackgen")
@@ -71,16 +73,17 @@ east = NodePath("../I")
 
 [node name="I" parent="TrackGenerator" unique_id=754877462 instance=ExtResource("4_roundaboutchunk")]
 
-[node name="BuildingScatterer" type="Node3D" parent="." unique_id=471849217]
-script = ExtResource("8_buildings")
-track_generator_path = NodePath("../TrackGenerator")
-building_scenes = Array[PackedScene]([ExtResource("10_building1"), ExtResource("11_building2"), ExtResource("12_building3"), ExtResource("13_building4")])
-
 [node name="ObjectiveManager" type="Node" parent="." unique_id=584910265]
 script = ExtResource("5_objmgr")
 pickup_point = NodePath("../PickupPoint")
 dropoff_point = NodePath("../DropoffPoint")
 track_generator_path = NodePath("../TrackGenerator")
+
+[node name="BuildingScatterer" type="Node3D" parent="." unique_id=471849217]
+script = ExtResource("8_buildings")
+track_generator_path = NodePath("../TrackGenerator")
+objective_manager_path = NodePath("../ObjectiveManager")
+building_scenes = Array[PackedScene]([ExtResource("10_building1"), ExtResource("11_building2"), ExtResource("12_building3"), ExtResource("13_building4")])
 
 [node name="PickupPoint" parent="." unique_id=1744686692 instance=ExtResource("6_objpoint")]
 require_action = "yeet"
@@ -94,7 +97,6 @@ beacon_color = Color(1, 0.6, 0.1, 1)
 building_scene = ExtResource("15_pizza")
 
 [node name="HUD" parent="." unique_id=1599276419 instance=ExtResource("7_hud")]
-crt_overlay_path = NodePath("../CRTOverlay")
 
 [node name="CRTOverlay" parent="." unique_id=428646710 instance=ExtResource("9_crt")]
 
@@ -103,6 +105,9 @@ script = ExtResource("18_skyfollow")
 camera_path = NodePath("../Car/CameraPivot/Camera3D")
 
 [node name="Sun" parent="." unique_id=180218455 instance=ExtResource("17_sun")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 45.842525, 0)
 script = ExtResource("18_skyfollow")
 camera_path = NodePath("../Car/CameraPivot/Camera3D")
 light_path = NodePath("../DirectionalLight3D")
+
+[node name="MenuOverlay" parent="." unique_id=1313906670 instance=ExtResource("19_menu")]

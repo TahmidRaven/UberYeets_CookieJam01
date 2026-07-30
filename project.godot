@@ -24,6 +24,10 @@ GameManager="*res://scripts/game_manager.gd"
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
+[gui]
+
+theme/custom="res://theme.tres"
+
 [input]
 
 accelerate={
