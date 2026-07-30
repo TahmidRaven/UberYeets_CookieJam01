@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://dsvwka07o1lm2"]
+
+[ext_resource type="Shader" uid="uid://cht4na1n4plsc" path="res://shaders/crt.gdshader" id="1_shader"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_crt"]
+shader = ExtResource("1_shader")
+shader_parameter/curvature = 6.0
+shader_parameter/scanline_intensity = 0.25
+shader_parameter/scanline_count = 1500.0000665
+shader_parameter/vignette_strength = 1.2
+shader_parameter/aberration = 0.0025
+shader_parameter/noise_amount = 0.03
+shader_parameter/flicker_speed = 6.0
+shader_parameter/flicker_amount = 0.03
+shader_parameter/brightness = 1.05
+
+[node name="CRTOverlay" type="CanvasLayer" unique_id=298737675]
+layer = 10
+
+[node name="BackBufferCopy" type="BackBufferCopy" parent="." unique_id=1834998280]
+copy_mode = 2
+
+[node name="Overlay" type="ColorRect" parent="." unique_id=299306916]
+material = SubResource("ShaderMaterial_crt")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2

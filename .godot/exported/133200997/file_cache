@@ -1,7 +1,8 @@
 res://prefabs/objective_point.tscn::84d0e3adcd2cff51a739b3106a208fe0::1785360258::res://.godot/exported/133200997/export-6d2d3f3906848dcab7502c24662dbb33-objective_point.scn
 res://prefabs/roundabout_tile.tscn::44a47ff101791feb3885c0865af56b63::1785427899::res://.godot/exported/133200997/export-6c491c91d3f0226558ba25a04c3d1300-roundabout_tile.scn
 res://scenes/car.tscn::965425fa6fa771427054614515bd96d4::1785362446::res://.godot/exported/133200997/export-1ca24e52cc6a83290e0baa7a560e4f76-car.scn
-res://scenes/hud.tscn::9dbafae0de646bb5699b4816193c7596::1785364446::res://.godot/exported/133200997/export-38bf74ff262409a94a41206b2b776d33-hud.scn
-res://scenes/main.tscn::f399d5dfd496ec8ebd0cab6d0a65bd1e::1785410852::res://.godot/exported/133200997/export-3ad5c15c4f3250da0cc7c1af1770d85f-main.scn
+res://scenes/hud.tscn::51c15578d468c54d45ea3caa580fdcf6::1785433759::res://.godot/exported/133200997/export-38bf74ff262409a94a41206b2b776d33-hud.scn
+res://scenes/main.tscn::9518dd8cee9600ede1c1f53d551e81d4::1785434309::res://.godot/exported/133200997/export-3ad5c15c4f3250da0cc7c1af1770d85f-main.scn
 res://scenes/road.tscn::b847af23a49e873e93d7777f76863da7::1785429034::res://.godot/exported/133200997/export-041d9cbadd562efa0088c822e4741668-road.scn
 res://scenes/roadRoundabout.tscn::2a0ac0898f9bc35b5fb6f0d2d28eb4fe::1785408680::res://.godot/exported/133200997/export-c0369c4650daaadb2f3ac7fb5816f446-roadRoundabout.scn
+res://scenes/crt_overlay.tscn::f1560838c35b8b645dabf143c94aad82::1785434067::res://.godot/exported/133200997/export-2d89c098b3c5528a8ac199e0a9441170-crt_overlay.scn

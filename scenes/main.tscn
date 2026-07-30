@@ -2,12 +2,13 @@
 
 [ext_resource type="PackedScene" uid="uid://djm32jhiq8v61" path="res://scenes/car.tscn" id="1_car"]
 [ext_resource type="Script" uid="uid://opw4ev26c7bk" path="res://scripts/track_generator.gd" id="2_trackgen"]
-[ext_resource type="PackedScene" uid="uid://bd7laynyw2038" path="res://scenes/road.tscn" id="3_roadchunk"]
+[ext_resource type="PackedScene" uid="uid://cr14kyfum7v5n" path="res://scenes/road.tscn" id="3_roadchunk"]
 [ext_resource type="PackedScene" uid="uid://be2sf7xyt18kr" path="res://scenes/roadRoundabout.tscn" id="4_roundaboutchunk"]
 [ext_resource type="Script" uid="uid://dryh0rvoc1un7" path="res://scripts/objective_manager.gd" id="5_objmgr"]
 [ext_resource type="PackedScene" path="res://prefabs/objective_point.tscn" id="6_objpoint"]
 [ext_resource type="PackedScene" path="res://scenes/hud.tscn" id="7_hud"]
 [ext_resource type="Script" uid="uid://33y6a1tkpewd" path="res://scripts/building_scatterer.gd" id="8_buildings"]
+[ext_resource type="PackedScene" uid="uid://dsvwka07o1lm2" path="res://scenes/crt_overlay.tscn" id="9_crt"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1"]
 
@@ -87,3 +88,6 @@ require_action = "yeet"
 beacon_color = Color(1, 0.6, 0.1, 1)
 
 [node name="HUD" parent="." unique_id=1599276419 instance=ExtResource("7_hud")]
+crt_overlay_path = NodePath("../CRTOverlay")
+
+[node name="CRTOverlay" parent="." unique_id=428646710 instance=ExtResource("9_crt")]
