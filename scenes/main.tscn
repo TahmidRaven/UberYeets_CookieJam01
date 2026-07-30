@@ -37,13 +37,35 @@ car_path = NodePath("../Car")
 
 [node name="A" parent="TrackGenerator" unique_id=1691638865 instance=ExtResource("4_roundaboutchunk")]
 east = NodePath("../B")
+north = NodePath("../D")
 
 [node name="B" parent="TrackGenerator" unique_id=939403195 instance=ExtResource("4_roundaboutchunk")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 204, 0, 0)
 east = NodePath("../C")
+north = NodePath("../E")
 
 [node name="C" parent="TrackGenerator" unique_id=44921908 instance=ExtResource("4_roundaboutchunk")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 408, 0, 0)
+north = NodePath("../F")
+
+[node name="D" parent="TrackGenerator" unique_id=493526532 instance=ExtResource("4_roundaboutchunk")]
+east = NodePath("../E")
+north = NodePath("../G")
+
+[node name="E" parent="TrackGenerator" unique_id=662642521 instance=ExtResource("4_roundaboutchunk")]
+east = NodePath("../F")
+north = NodePath("../H")
+
+[node name="F" parent="TrackGenerator" unique_id=928361253 instance=ExtResource("4_roundaboutchunk")]
+north = NodePath("../I")
+
+[node name="G" parent="TrackGenerator" unique_id=1119760345 instance=ExtResource("4_roundaboutchunk")]
+east = NodePath("../H")
+
+[node name="H" parent="TrackGenerator" unique_id=1541545326 instance=ExtResource("4_roundaboutchunk")]
+east = NodePath("../I")
+
+[node name="I" parent="TrackGenerator" unique_id=754877462 instance=ExtResource("4_roundaboutchunk")]
 
 [node name="BuildingScatterer" type="Node3D" parent="." unique_id=471849217]
 script = ExtResource("8_buildings")
@@ -55,7 +77,7 @@ pickup_point = NodePath("../PickupPoint")
 dropoff_point = NodePath("../DropoffPoint")
 track_generator_path = NodePath("../TrackGenerator")
 pickup_node_path = NodePath("../TrackGenerator/A")
-dropoff_node_path = NodePath("../TrackGenerator/C")
+dropoff_node_path = NodePath("../TrackGenerator/I")
 
 [node name="PickupPoint" parent="." unique_id=1744686692 instance=ExtResource("6_objpoint")]
 beacon_color = Color(0.2, 1, 0.3, 1)

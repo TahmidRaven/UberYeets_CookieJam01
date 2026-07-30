@@ -7,6 +7,7 @@ extends Node3D
 @export var building_spacing := 12.0
 @export var spacing_jitter := 3.0
 @export var scatter_on_roundabouts := false
+@export var intersection_clearance := 25.0
 @export_range(0.0, 1.0) var tree_chance := 0.35
 
 @export_category("Building Size")
@@ -61,8 +62,9 @@ func _scatter():
 		_scatter_chunk(transforms[i], extents[i])
 
 func _scatter_chunk(chunk_transform: Transform3D, extent: float):
-	var x := 0.0
-	while x < extent:
+	var x := intersection_clearance
+	var limit := extent - intersection_clearance
+	while x < limit:
 		for side in [-1.0, 1.0]:
 			if _rng.randf() < tree_chance:
 				_spawn_tree(chunk_transform, x, side)

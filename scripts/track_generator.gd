@@ -2,6 +2,7 @@ extends Node3D
 
 @export var road_chunk_scene: PackedScene
 @export var segments_per_edge := 1
+@export var intersection_edge_trim := 0.0
 
 @export_category("Lane Confinement")
 @export var confine_to_lane := true
@@ -155,10 +156,10 @@ func _closest_intersection(from_position: Vector3) -> Node3D:
 
 func _measure_intersection(sample: Node3D):
 	var aabb := _local_aabb(sample)
-	_intersection_west = aabb.position.x
-	_intersection_east = aabb.position.x + aabb.size.x
-	_intersection_south = aabb.position.z
-	_intersection_north = aabb.position.z + aabb.size.z
+	_intersection_west = aabb.position.x + intersection_edge_trim
+	_intersection_east = aabb.position.x + aabb.size.x - intersection_edge_trim
+	_intersection_south = aabb.position.z + intersection_edge_trim
+	_intersection_north = aabb.position.z + aabb.size.z - intersection_edge_trim
 
 func _measure_road_chunk():
 	if road_chunk_scene == null:

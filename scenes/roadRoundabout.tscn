@@ -7,18 +7,4 @@
 script = ExtResource("2_intersection")
 
 [node name="RoundaboutTile" parent="." unique_id=2033655118 instance=ExtResource("1_3g1x2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.5, 0, 0)
-
-[node name="Exits" type="Node3D" parent="." unique_id=1617019137]
-
-[node name="East" type="Marker3D" parent="Exits" unique_id=407226815]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27.044697, 0, 0)
-
-[node name="South" type="Marker3D" parent="Exits" unique_id=1867599245]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 17.5, 0, -9.645199)
-
-[node name="North" type="Marker3D" parent="Exits" unique_id=787802444]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 17.5, 0, 9.79583)
-
-[node name="West" type="Marker3D" parent="Exits" unique_id=782589122]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 7.7196236, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.547523, 0, 0.028629303)
