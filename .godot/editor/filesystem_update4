@@ -1,9 +1,0 @@
-res://scenes/road.tscn
-res://scenes/roadRoundabout.tscn
-res://scripts/track_generator.gd
-res://scripts/building_scatterer.gd
-res://scripts/minimap.gd
-res://scripts/objective_manager.gd
-res://scenes/main.tscn
-res://scripts/car.gd
-res://scripts/game_manager.gd
