@@ -1,44 +1,7 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene format=3 uid="uid://bnv2mp5qwslah"]
 
-[ext_resource type="PackedScene" path="res://models/roundabout.glb" id="1_roundabout"]
+[ext_resource type="PackedScene" uid="uid://c5p8jxvve30dk" path="res://models/roundabout.glb" id="1_roundabout"]
 
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_island"]
-radius = 3.508378
-height = 1.2
+[node name="RoundaboutTile" type="Node3D" unique_id=79375764]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_cornerstub"]
-size = Vector3(2.237149, 1.2, 0.4)
-
-[node name="RoundaboutTile" type="Node3D"]
-
-[node name="roundabout" parent="." instance=ExtResource("1_roundabout")]
-
-[node name="RoundaboutIsland" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="RoundaboutIsland"]
-shape = SubResource("CylinderShape3D_island")
-
-[node name="CornerStubNE" type="StaticBody3D" parent="."]
-transform = Transform3D(-0.707107, 0, 0.707107, 0, 1, 0, 0.707107, 0, 0.707107, 7.087995, 0.6, 7.087995)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="CornerStubNE"]
-shape = SubResource("BoxShape3D_cornerstub")
-
-[node name="CornerStubNW" type="StaticBody3D" parent="."]
-transform = Transform3D(-0.707107, 0, -0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -7.087995, 0.6, 7.087995)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="CornerStubNW"]
-shape = SubResource("BoxShape3D_cornerstub")
-
-[node name="CornerStubSW" type="StaticBody3D" parent="."]
-transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, -0.707107, 0, -0.707107, -7.087995, 0.6, -7.087995)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="CornerStubSW"]
-shape = SubResource("BoxShape3D_cornerstub")
-
-[node name="CornerStubSE" type="StaticBody3D" parent="."]
-transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, 0.707107, 0, -0.707107, 7.087995, 0.6, -7.087995)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="CornerStubSE"]
-shape = SubResource("BoxShape3D_cornerstub")
+[node name="roundabout" parent="." unique_id=383099044 instance=ExtResource("1_roundabout")]

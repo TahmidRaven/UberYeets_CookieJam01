@@ -2,7 +2,7 @@ extends Node
 
 @export_category("Messages")
 @export var press_to_start_text := "Press W to start the car"
-@export var brakes_failing_again_text := "Brakes are failing again! Space guns it now!"
+@export var brakes_failing_again_text := "Brakes are failing again!"
 @export var brakes_fixed_for_good_text := "All deliveries done - brakes are fixed for good!"
 
 @export_category("Timing")

@@ -15,7 +15,7 @@ extends Node
 @export_category("Messages")
 @export var first_pickup_text := "Looks like the brakes aren't working... but you've got a pickup! Press E to grab it (1/%d)."
 @export var dropoff_prompt_text := "Press E to YEET them out!"
-@export var round_complete_text := "Delivered! (%d/%d) Brakes hold for %ds, then Space guns it again."
+@export var round_complete_text := "Delivered! (%d/%d) Brakes hold for %ds"
 @export var all_done_text := "All %d deliveries complete!"
 
 var _pickup: Area3D

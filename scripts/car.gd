@@ -4,6 +4,7 @@ extends CharacterBody3D
 @export var max_speed := 40.0
 @export var turn_speed := 2.8
 @export var friction := 10.0
+@export var reverse_strength := 30.0
 
 @export_category("Runaway Car Gag")
 @export var auto_accelerate := true
@@ -28,6 +29,9 @@ func _physics_process(delta):
 	var accel = acceleration if auto_accelerate else Input.get_action_strength("accelerate") * acceleration
 
 	velocity += transform.basis.x * accel * delta
+
+	if Input.is_action_pressed("reverse"):
+		velocity += transform.basis.x * -reverse_strength * delta
 
 	if space_accelerates and Input.is_action_pressed("panic"):
 		velocity += transform.basis.x * acceleration * delta
