@@ -1,5 +1,0 @@
-res://scenes/car.tscn
-res://scripts/car.gd
-res://scripts/track_generator.gd
-res://scenes/hud.tscn
-res://scripts/objective_manager.gd
