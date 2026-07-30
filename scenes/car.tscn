@@ -1,17 +1,18 @@
 [gd_scene format=3 uid="uid://djm32jhiq8v61"]
 
-[ext_resource type="PackedScene" uid="uid://dclq12ghh3uuh" path="res://models/car.glb" id="1_c35m8"]
 [ext_resource type="Script" uid="uid://k61q5aakhwlu" path="res://scripts/car.gd" id="1_qt2eu"]
+[ext_resource type="PackedScene" uid="uid://beh003jegkyba" path="res://models/car/car.glb" id="2_50v30"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_qt2eu"]
 
 [node name="CarBody3D" type="CharacterBody3D" unique_id=2146833100]
 script = ExtResource("1_qt2eu")
 
-[node name="Car" parent="." unique_id=1438921796 instance=ExtResource("1_c35m8")]
+[node name="car2" parent="." unique_id=1811798584 instance=ExtResource("2_50v30")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=314948983]
-transform = Transform3D(6.6482954, 0, 0, 0, 1.892787, 0, 0, 0, 3.5007699, -0.7470144, 1.2965982, 0)
+transform = Transform3D(8.0901985, 0, 0, 0, 1.9638816, 0, 0, 0, 3.7668653, 0.64633834, 1.2965982, 0)
 shape = SubResource("BoxShape3D_qt2eu")
 
 [node name="CameraPivot" type="Node3D" parent="." unique_id=1771764594]

@@ -1,5 +1,7 @@
 extends Node3D
 
+const MeshUtils = preload("res://scripts/mesh_utils.gd")
+
 @export var track_generator_path: NodePath
 
 @export_category("Placement")
@@ -10,19 +12,8 @@ extends Node3D
 @export var intersection_clearance := 25.0
 @export_range(0.0, 1.0) var tree_chance := 0.35
 
-@export_category("Building Size")
-@export var min_width := 6.0
-@export var max_width := 12.0
-@export var min_depth := 6.0
-@export var max_depth := 12.0
-@export var min_height := 8.0
-@export var max_height := 30.0
-@export var building_colors: Array[Color] = [
-	Color(0.75, 0.75, 0.78),
-	Color(0.65, 0.68, 0.74),
-	Color(0.80, 0.72, 0.64),
-	Color(0.55, 0.58, 0.62),
-]
+@export_category("Building Models")
+@export var building_scenes: Array[PackedScene] = []
 
 @export_category("Tree Size")
 @export var tree_radius_min := 0.8
@@ -73,23 +64,16 @@ func _scatter_chunk(chunk_transform: Transform3D, extent: float):
 		x += building_spacing + _rng.randf_range(-spacing_jitter, spacing_jitter)
 
 func _spawn_building(chunk_transform: Transform3D, x: float, side: float):
-	var width := _rng.randf_range(min_width, max_width)
-	var depth := _rng.randf_range(min_depth, max_depth)
-	var height := _rng.randf_range(min_height, max_height)
+	if building_scenes.is_empty():
+		return
 
-	var mesh_instance := MeshInstance3D.new()
-	var box := BoxMesh.new()
-	box.size = Vector3(width, height, depth)
-	mesh_instance.mesh = box
+	var scene: PackedScene = building_scenes[_rng.randi_range(0, building_scenes.size() - 1)]
+	var instance: Node3D = scene.instantiate()
+	add_child(instance)
 
-	var mat := StandardMaterial3D.new()
-	if not building_colors.is_empty():
-		mat.albedo_color = building_colors[_rng.randi_range(0, building_colors.size() - 1)]
-	mesh_instance.material_override = mat
-
-	add_child(mesh_instance)
-	var local_pos := Vector3(x, height * 0.5, side * (side_offset + depth * 0.5))
-	mesh_instance.global_transform = chunk_transform * Transform3D(Basis.IDENTITY, local_pos)
+	var aabb := MeshUtils.local_aabb(instance)
+	var local_pos := Vector3(x, -aabb.position.y, side * (side_offset + aabb.size.z * 0.5))
+	instance.global_transform = chunk_transform * Transform3D(Basis.IDENTITY, local_pos)
 
 func _spawn_tree(chunk_transform: Transform3D, x: float, side: float):
 	var radius := _rng.randf_range(tree_radius_min, tree_radius_max)
