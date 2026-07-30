@@ -21,7 +21,8 @@ var _track_generator: Node3D
 var _pickup: Node3D
 var _dropoff: Node3D
 
-var _route_points: Array[Vector2] = []
+var _edges: Array[Dictionary] = []
+var _node_positions: Array[Vector3] = []
 var _world_min := Vector2.ZERO
 var _world_scale := 1.0
 
@@ -38,15 +39,19 @@ func _ready():
 			_track_generator.route_generated.connect(_on_route_generated)
 
 func _on_route_generated():
-	var points: PackedVector3Array = _track_generator.get_path_points()
-	if points.is_empty():
+	var intersections: Array[Node3D] = _track_generator.get_intersections()
+	if intersections.is_empty():
 		return
 
-	var min_x: float = points[0].x
-	var max_x: float = points[0].x
-	var min_z: float = points[0].z
-	var max_z: float = points[0].z
-	for p in points:
+	_node_positions.clear()
+	for node in intersections:
+		_node_positions.append(node.global_position)
+
+	var min_x: float = _node_positions[0].x
+	var max_x: float = _node_positions[0].x
+	var min_z: float = _node_positions[0].z
+	var max_z: float = _node_positions[0].z
+	for p in _node_positions:
 		min_x = min(min_x, p.x)
 		max_x = max(max_x, p.x)
 		min_z = min(min_z, p.z)
@@ -57,9 +62,7 @@ func _on_route_generated():
 	var available := Vector2(size.x - map_padding * 2.0, size.y - map_padding * 2.0)
 	_world_scale = min(available.x / world_size.x, available.y / world_size.y)
 
-	_route_points.clear()
-	for p in points:
-		_route_points.append(_world_to_local(Vector3(p.x, 0.0, p.z)))
+	_edges = _track_generator.get_edges()
 
 func _world_to_local(world_pos: Vector3) -> Vector2:
 	var flat := Vector2(world_pos.x, world_pos.z) - _world_min
@@ -71,8 +74,13 @@ func _process(_delta):
 func _draw():
 	draw_rect(Rect2(Vector2.ZERO, size), background_color)
 
-	if _route_points.size() >= 2:
-		draw_polyline(_route_points, route_color, route_width)
+	for edge in _edges:
+		var a: Vector3 = edge["a"]
+		var b: Vector3 = edge["b"]
+		draw_line(_world_to_local(a), _world_to_local(b), route_color, route_width)
+
+	for node_pos in _node_positions:
+		draw_circle(_world_to_local(node_pos), route_width * 1.5, route_color)
 
 	if _pickup and is_instance_valid(_pickup):
 		draw_circle(_world_to_local(_pickup.global_position), marker_radius, pickup_color)

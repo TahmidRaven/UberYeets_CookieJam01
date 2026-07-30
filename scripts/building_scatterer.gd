@@ -3,7 +3,7 @@ extends Node3D
 @export var track_generator_path: NodePath
 
 @export_category("Placement")
-@export var side_offset := 14.0
+@export var side_offset := 20.0
 @export var building_spacing := 12.0
 @export var spacing_jitter := 3.0
 @export var scatter_on_roundabouts := false

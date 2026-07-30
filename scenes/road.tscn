@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://4nark3lnogrc" path="res://models/road.glb" id="1_mv8x7"]
 
 [node name="roadStright" type="Node3D" unique_id=773794624]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.415167, 0, 0)
 
 [node name="road" parent="." unique_id=1482012007 instance=ExtResource("1_mv8x7")]
 
@@ -15,8 +16,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 67.844604, 0, 0)
 [node name="road4" parent="." unique_id=2125255611 instance=ExtResource("1_mv8x7")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 101.76238, 0, 0)
 
+[node name="road5" parent="." unique_id=813937347 instance=ExtResource("1_mv8x7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 135.59862, 0, 0)
+
 [node name="Exits" type="Node3D" parent="." unique_id=4264852]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 118.95005, 0, 0)
 
 [node name="Exit" type="Marker3D" parent="Exits" unique_id=1294510514]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5445633, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 169, 0, 0)

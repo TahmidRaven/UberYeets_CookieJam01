@@ -1,19 +1,24 @@
 [gd_scene format=3 uid="uid://be2sf7xyt18kr"]
 
 [ext_resource type="PackedScene" path="res://prefabs/roundabout_tile.tscn" id="1_3g1x2"]
+[ext_resource type="Script" path="res://scripts/intersection_node.gd" id="2_intersection"]
 
 [node name="RoadRoundabout" type="Node3D" unique_id=1599411828]
+script = ExtResource("2_intersection")
 
 [node name="RoundaboutTile" parent="." unique_id=2033655118 instance=ExtResource("1_3g1x2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.5, 0, 0)
 
 [node name="Exits" type="Node3D" parent="." unique_id=1617019137]
 
-[node name="Front" type="Marker3D" parent="Exits" unique_id=407226815]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0, 0)
+[node name="East" type="Marker3D" parent="Exits" unique_id=407226815]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35, 0, 0)
 
-[node name="Left" type="Marker3D" parent="Exits" unique_id=1867599245]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 10, 0, -10)
+[node name="South" type="Marker3D" parent="Exits" unique_id=1867599245]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 17.5, 0, -17.5)
 
-[node name="Right" type="Marker3D" parent="Exits" unique_id=787802444]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 10, 0, 10)
+[node name="North" type="Marker3D" parent="Exits" unique_id=787802444]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 17.5, 0, 17.5)
+
+[node name="West" type="Marker3D" parent="Exits"]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0)

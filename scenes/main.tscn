@@ -1,13 +1,13 @@
-[gd_scene load_steps=12 format=3]
+[gd_scene format=3 uid="uid://chlksr43o4wqf"]
 
-[ext_resource type="PackedScene" path="res://scenes/car.tscn" id="1_car"]
-[ext_resource type="Script" path="res://scripts/track_generator.gd" id="2_trackgen"]
-[ext_resource type="PackedScene" path="res://scenes/road.tscn" id="3_roadchunk"]
-[ext_resource type="PackedScene" path="res://scenes/roadRoundabout.tscn" id="4_roundaboutchunk"]
-[ext_resource type="Script" path="res://scripts/objective_manager.gd" id="5_objmgr"]
+[ext_resource type="PackedScene" uid="uid://djm32jhiq8v61" path="res://scenes/car.tscn" id="1_car"]
+[ext_resource type="Script" uid="uid://opw4ev26c7bk" path="res://scripts/track_generator.gd" id="2_trackgen"]
+[ext_resource type="PackedScene" uid="uid://bd7laynyw2038" path="res://scenes/road.tscn" id="3_roadchunk"]
+[ext_resource type="PackedScene" uid="uid://be2sf7xyt18kr" path="res://scenes/roadRoundabout.tscn" id="4_roundaboutchunk"]
+[ext_resource type="Script" uid="uid://dryh0rvoc1un7" path="res://scripts/objective_manager.gd" id="5_objmgr"]
 [ext_resource type="PackedScene" path="res://prefabs/objective_point.tscn" id="6_objpoint"]
 [ext_resource type="PackedScene" path="res://scenes/hud.tscn" id="7_hud"]
-[ext_resource type="Script" path="res://scripts/building_scatterer.gd" id="8_buildings"]
+[ext_resource type="Script" uid="uid://33y6a1tkpewd" path="res://scripts/building_scatterer.gd" id="8_buildings"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1"]
 
@@ -18,43 +18,55 @@ sky_material = SubResource("ProceduralSkyMaterial_1")
 background_mode = 2
 sky = SubResource("Sky_1")
 ambient_light_source = 3
-ambient_light_sky_contribution = 1.0
 
-[node name="Main" type="Node3D"]
+[node name="Main" type="Node3D" unique_id=175134065]
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1683360422]
 environment = SubResource("Environment_1")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-rotation_degrees = Vector3(-45, -30, 0)
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=715762207]
+transform = Transform3D(0.8660254, 0.35355338, -0.35355338, 0, 0.70710677, 0.70710677, 0.5, -0.6123724, 0.6123724, 0, 0, 0)
 shadow_enabled = true
 
-[node name="Car" parent="." instance=ExtResource("1_car")]
+[node name="Car" parent="." unique_id=435631804 instance=ExtResource("1_car")]
 
-[node name="TrackGenerator" type="Node3D" parent="."]
+[node name="TrackGenerator" type="Node3D" parent="." unique_id=328515916]
 script = ExtResource("2_trackgen")
 road_chunk_scene = ExtResource("3_roadchunk")
-roundabout_chunk_scene = ExtResource("4_roundaboutchunk")
 car_path = NodePath("../Car")
 
-[node name="BuildingScatterer" type="Node3D" parent="."]
+[node name="A" parent="TrackGenerator" unique_id=1691638865 instance=ExtResource("4_roundaboutchunk")]
+east = NodePath("../B")
+
+[node name="B" parent="TrackGenerator" unique_id=939403195 instance=ExtResource("4_roundaboutchunk")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 204, 0, 0)
+east = NodePath("../C")
+north = NodePath("../D")
+
+[node name="C" parent="TrackGenerator" unique_id=44921908 instance=ExtResource("4_roundaboutchunk")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 408, 0, 0)
+
+[node name="D" parent="TrackGenerator" unique_id=183501445 instance=ExtResource("4_roundaboutchunk")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 204, 0, 204)
+
+[node name="BuildingScatterer" type="Node3D" parent="." unique_id=471849217]
 script = ExtResource("8_buildings")
 track_generator_path = NodePath("../TrackGenerator")
 
-[node name="ObjectiveManager" type="Node" parent="."]
+[node name="ObjectiveManager" type="Node" parent="." unique_id=584910265]
 script = ExtResource("5_objmgr")
 pickup_point = NodePath("../PickupPoint")
 dropoff_point = NodePath("../DropoffPoint")
 track_generator_path = NodePath("../TrackGenerator")
+pickup_node_path = NodePath("../TrackGenerator/A")
+dropoff_node_path = NodePath("../TrackGenerator/C")
 
-[node name="PickupPoint" parent="." instance=ExtResource("6_objpoint")]
-kind = "Pickup"
-require_action = ""
+[node name="PickupPoint" parent="." unique_id=1744686692 instance=ExtResource("6_objpoint")]
 beacon_color = Color(0.2, 1, 0.3, 1)
 
-[node name="DropoffPoint" parent="." instance=ExtResource("6_objpoint")]
+[node name="DropoffPoint" parent="." unique_id=72744603 instance=ExtResource("6_objpoint")]
 kind = "Dropoff"
 require_action = "yeet"
 beacon_color = Color(1, 0.6, 0.1, 1)
 
-[node name="HUD" parent="." instance=ExtResource("7_hud")]
+[node name="HUD" parent="." unique_id=1599276419 instance=ExtResource("7_hud")]

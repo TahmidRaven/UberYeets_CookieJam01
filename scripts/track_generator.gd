@@ -1,48 +1,47 @@
 extends Node3D
 
 @export var road_chunk_scene: PackedScene
-@export var roundabout_chunk_scene: PackedScene
-@export_range(0.0, 1.0) var roundabout_chance := 0.2
-@export var chunk_count := 12
-@export_range(0.0, 1.0) var turn_chance := 0.5
-@export var road_chunk_extent := 135.680158
-@export var roundabout_chunk_extent := 20.0
+@export var road_chunk_extent := 169.0
+@export var intersection_extent := 35.0
 
 @export_category("Lane Confinement")
 @export var confine_to_lane := true
 @export var lane_half_width := 8.0
 @export var lane_correction_speed := 10.0
 
-@export var rng_seed := 0
 @export var car_path: NodePath
 
 signal route_generated
 
 var route_ready := false
 
-var _rng := RandomNumberGenerator.new()
 var _chunks: Array[Node3D] = []
 var _chunk_extents: Array[float] = []
-var _chunk_is_roundabout: Array[bool] = []
-var _path_points: PackedVector3Array = []
+var _chunk_is_intersection: Array[bool] = []
+var _intersections: Array[Node3D] = []
+var _edges: Array[Dictionary] = []
 var _car: CharacterBody3D
 
 func _ready():
-	if rng_seed != 0:
-		_rng.seed = rng_seed
-	else:
-		_rng.randomize()
-
 	_car = get_node_or_null(car_path)
 	if _car == null:
 		_car = get_tree().get_first_node_in_group("car")
 
-	var start_position: Vector3 = _car.global_position if _car else global_position
-	var start_yaw: float = _car.rotation.y if _car else 0.0
-	var entry_transform := Transform3D(Basis(Vector3.UP, start_yaw), start_position)
+	for node in get_tree().get_nodes_in_group("intersection"):
+		_intersections.append(node)
+		_chunks.append(node)
+		_chunk_extents.append(intersection_extent)
+		_chunk_is_intersection.append(true)
 
-	for i in chunk_count:
-		entry_transform = _spawn_chunk(entry_transform)
+	for node in _intersections:
+		if not node.east.is_empty():
+			var neighbor := node.get_node_or_null(node.east)
+			if neighbor:
+				_build_edge(node, neighbor, "East", "West")
+		if not node.north.is_empty():
+			var neighbor := node.get_node_or_null(node.north)
+			if neighbor:
+				_build_edge(node, neighbor, "North", "South")
 
 	route_ready = true
 	route_generated.emit()
@@ -55,14 +54,11 @@ func _physics_process(delta):
 		return
 	_apply_lane_confinement(delta)
 
-func get_transform_at_fraction(f: float) -> Transform3D:
-	if _chunks.is_empty():
-		return Transform3D.IDENTITY
-	var idx := clampi(int(f * (_chunks.size() - 1)), 0, _chunks.size() - 1)
-	return _chunks[idx].global_transform
+func get_intersections() -> Array[Node3D]:
+	return _intersections
 
-func get_path_points() -> PackedVector3Array:
-	return _path_points
+func get_edges() -> Array[Dictionary]:
+	return _edges
 
 func get_chunk_transforms() -> Array[Transform3D]:
 	var transforms: Array[Transform3D] = []
@@ -74,51 +70,34 @@ func get_chunk_extents() -> Array[float]:
 	return _chunk_extents
 
 func get_chunk_is_roundabout() -> Array[bool]:
-	return _chunk_is_roundabout
+	return _chunk_is_intersection
 
-func _spawn_chunk(entry_transform: Transform3D) -> Transform3D:
-	var use_roundabout = roundabout_chunk_scene != null and _rng.randf() < roundabout_chance
-	var scene := roundabout_chunk_scene if use_roundabout else road_chunk_scene
-	if scene == null:
-		scene = road_chunk_scene if road_chunk_scene != null else roundabout_chunk_scene
-	if scene == null:
-		return entry_transform
+func _build_edge(from_node: Node, to_node: Node, from_marker_name: String, to_marker_name: String):
+	var from_marker: Node3D = from_node.get_node("Exits/" + from_marker_name)
+	var to_marker: Node3D = to_node.get_node("Exits/" + to_marker_name)
 
-	var chunk := scene.instantiate()
-	add_child(chunk)
-	chunk.global_transform = entry_transform
+	var start: Vector3 = from_marker.global_transform.origin
+	var end: Vector3 = to_marker.global_transform.origin
+	var distance := (end - start).length()
 
-	_chunks.append(chunk)
-	_chunk_extents.append(roundabout_chunk_extent if use_roundabout else road_chunk_extent)
-	_chunk_is_roundabout.append(use_roundabout)
-	_path_points.append(entry_transform.origin)
+	if road_chunk_scene == null or distance <= 0.001:
+		return
 
-	var exits := chunk.get_node_or_null("Exits")
-	if exits == null or exits.get_child_count() == 0:
-		return entry_transform
+	var segment_basis: Basis = from_marker.global_transform.basis
+	var direction: Vector3 = segment_basis.x
+	var segment_count := maxi(1, roundi(distance / road_chunk_extent))
 
-	var choices: Array = exits.get_children()
-	var chosen: Node3D
+	for i in segment_count:
+		var chunk := road_chunk_scene.instantiate()
+		add_child(chunk)
+		var origin := start + direction * (road_chunk_extent * i)
+		chunk.global_transform = Transform3D(segment_basis, origin)
 
-	if choices.size() == 1:
-		chosen = choices[0]
-	else:
-		var straight: Node3D = exits.get_node_or_null("Front")
-		if straight == null:
-			straight = exits.get_node_or_null("Straight")
+		_chunks.append(chunk)
+		_chunk_extents.append(road_chunk_extent)
+		_chunk_is_intersection.append(false)
 
-		if straight != null and _rng.randf() >= turn_chance:
-			chosen = straight
-		else:
-			var turn_choices: Array = []
-			for m in choices:
-				if m != straight:
-					turn_choices.append(m)
-			if turn_choices.is_empty():
-				turn_choices = choices
-			chosen = turn_choices[_rng.randi_range(0, turn_choices.size() - 1)]
-
-	return chosen.global_transform
+	_edges.append({"a": start, "b": end})
 
 func _apply_lane_confinement(delta):
 	if _chunks.is_empty():
@@ -127,6 +106,7 @@ func _apply_lane_confinement(delta):
 	var best_dist := INF
 	var best_local := Vector3.ZERO
 	var best_chunk: Node3D = null
+	var best_is_intersection := false
 
 	for i in _chunks.size():
 		var chunk := _chunks[i]
@@ -141,8 +121,9 @@ func _apply_lane_confinement(delta):
 			best_dist = d
 			best_local = local
 			best_chunk = chunk
+			best_is_intersection = _chunk_is_intersection[i]
 
-	if best_chunk == null:
+	if best_chunk == null or best_is_intersection:
 		return
 
 	var clamped_z: float = clamp(best_local.z, -lane_half_width, lane_half_width)

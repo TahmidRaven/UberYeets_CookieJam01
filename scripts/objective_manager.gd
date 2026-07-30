@@ -5,8 +5,8 @@ extends Node
 @export var track_generator_path: NodePath
 
 @export_category("Placement")
-@export_range(0.0, 1.0) var pickup_fraction := 0.15
-@export_range(0.0, 1.0) var dropoff_fraction := 0.7
+@export var pickup_node_path: NodePath
+@export var dropoff_node_path: NodePath
 @export var beacon_height := 1.0
 
 @export_category("Messages")
@@ -40,12 +40,25 @@ func _ready():
 	GameManager.state_changed.connect(_on_game_state_changed)
 
 func _on_route_generated():
+	var pickup_node: Node3D = get_node_or_null(pickup_node_path)
+	var dropoff_node: Node3D = get_node_or_null(dropoff_node_path)
+
+	if pickup_node == null or dropoff_node == null:
+		var intersections: Array[Node3D] = _track_generator.get_intersections()
+		if intersections.size() < 2:
+			return
+		intersections.shuffle()
+		if pickup_node == null:
+			pickup_node = intersections[0]
+		if dropoff_node == null:
+			dropoff_node = intersections[1] if intersections[1] != pickup_node else intersections[0]
+
 	if _pickup:
-		var t: Transform3D = _track_generator.get_transform_at_fraction(pickup_fraction)
+		var t: Transform3D = pickup_node.global_transform
 		t.origin.y += beacon_height
 		_pickup.global_transform = t
 	if _dropoff:
-		var t: Transform3D = _track_generator.get_transform_at_fraction(dropoff_fraction)
+		var t: Transform3D = dropoff_node.global_transform
 		t.origin.y += beacon_height
 		_dropoff.global_transform = t
 
