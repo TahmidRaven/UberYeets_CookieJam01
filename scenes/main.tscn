@@ -41,13 +41,9 @@ east = NodePath("../B")
 [node name="B" parent="TrackGenerator" unique_id=939403195 instance=ExtResource("4_roundaboutchunk")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 204, 0, 0)
 east = NodePath("../C")
-north = NodePath("../D")
 
 [node name="C" parent="TrackGenerator" unique_id=44921908 instance=ExtResource("4_roundaboutchunk")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 408, 0, 0)
-
-[node name="D" parent="TrackGenerator" unique_id=183501445 instance=ExtResource("4_roundaboutchunk")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 204, 0, 204)
 
 [node name="BuildingScatterer" type="Node3D" parent="." unique_id=471849217]
 script = ExtResource("8_buildings")
