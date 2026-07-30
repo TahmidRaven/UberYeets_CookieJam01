@@ -31,7 +31,6 @@ const _DIRECTIONS := {
 	"North": Vector3(0, 0, 1),
 	"South": Vector3(0, 0, -1),
 }
-
 # Measured from the actual instanced geometry at runtime (not hand-entered),
 # so mismatched or off-center origins baked into the source meshes can't
 # cause placement gaps/overlaps - we measure whatever is really there.
@@ -58,13 +57,13 @@ func _ready():
 	_measure_intersection(_intersections[0])
 	_measure_road_chunk()
 
+	var neighbor_of: Dictionary = _build_adjacency()
+
 	for node in _intersections:
 		_chunks.append(node)
 		_chunk_min_x.append(_intersection_west)
 		_chunk_extents.append(_intersection_east - _intersection_west)
 		_chunk_is_intersection.append(true)
-
-	var neighbor_of: Dictionary = _build_adjacency()
 
 	var start_node := _closest_intersection(_car.global_position if _car else global_position)
 	var edge_span := (_intersection_east - _intersection_west) + segments_per_edge * _road_extent

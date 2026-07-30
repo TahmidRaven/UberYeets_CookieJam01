@@ -1,6 +1,9 @@
-[gd_scene format=3 uid="uid://bd7laynyw2038"]
+[gd_scene format=3 uid="uid://cr14kyfum7v5n"]
 
 [ext_resource type="PackedScene" uid="uid://4nark3lnogrc" path="res://models/road.glb" id="1_mv8x7"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_curb"]
+size = Vector3(169.53493, 1.2, 0.4)
 
 [node name="roadStright" type="Node3D" unique_id=773794624]
 
@@ -17,3 +20,17 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 101.76238, 0, 0)
 
 [node name="road5" parent="." unique_id=813937347 instance=ExtResource("1_mv8x7")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 135.59862, 0, 0)
+
+[node name="CurbLeft" type="StaticBody3D" parent="." unique_id=587984868]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 66.54321, 0.6, -9.144238)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CurbLeft" unique_id=597407615]
+transform = Transform3D(0.96, 0, 0, 0, 0.96, 0, 0, 0, 0.96, 0, 0, 0)
+shape = SubResource("BoxShape3D_curb")
+
+[node name="CurbRight" type="StaticBody3D" parent="." unique_id=1660311670]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 66.54321, 0.6, 9.144238)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CurbRight" unique_id=1134634169]
+transform = Transform3D(0.96, 0, 0, 0, 0.96, 0, 0, 0, 0.96, 0, 0, 0)
+shape = SubResource("BoxShape3D_curb")
