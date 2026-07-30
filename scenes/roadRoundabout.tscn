@@ -4,7 +4,8 @@
 [ext_resource type="Script" uid="uid://b7nj8sc4b160h" path="res://scripts/intersection_node.gd" id="2_intersection"]
 
 [node name="RoadRoundabout" type="Node3D" unique_id=1599411828]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.076786995, 0, 0)
 script = ExtResource("2_intersection")
 
 [node name="RoundaboutTile" parent="." unique_id=2033655118 instance=ExtResource("1_3g1x2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.547523, 0, 0.028629303)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.12977791, 0, 0.028629303)
