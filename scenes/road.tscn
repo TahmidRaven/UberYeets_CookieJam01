@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://bd7laynyw2038"]
+
+[ext_resource type="PackedScene" uid="uid://4nark3lnogrc" path="res://models/road.glb" id="1_mv8x7"]
+
+[node name="roadStright" type="Node3D" unique_id=773794624]
+
+[node name="road" parent="." unique_id=1482012007 instance=ExtResource("1_mv8x7")]
+
+[node name="road2" parent="." unique_id=1183491268 instance=ExtResource("1_mv8x7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 33.917778, 0, 0)
+
+[node name="road3" parent="." unique_id=1025831708 instance=ExtResource("1_mv8x7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 67.844604, 0, 0)
+
+[node name="road4" parent="." unique_id=2125255611 instance=ExtResource("1_mv8x7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 101.76238, 0, 0)
+
+[node name="Exits" type="Node3D" parent="." unique_id=4264852]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 118.95005, 0, 0)
+
+[node name="Exit" type="Marker3D" parent="Exits" unique_id=1294510514]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5445633, 0, 0)

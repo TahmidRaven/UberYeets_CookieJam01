@@ -1,7 +1,0 @@
-[gd_scene load_steps=2 format=3]
-
-[ext_resource type="PackedScene" path="res://models/road.glb" id="1_road"]
-
-[node name="RoadTile" type="Node3D"]
-
-[node name="road" parent="." instance=ExtResource("1_road")]

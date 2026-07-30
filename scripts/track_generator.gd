@@ -1,22 +1,12 @@
 extends Node3D
 
-@export var road_tile_scene: PackedScene
-@export var roundabout_tile_scene: PackedScene
+@export var road_chunk_scene: PackedScene
+@export var roundabout_chunk_scene: PackedScene
 @export_range(0.0, 1.0) var roundabout_chance := 0.2
-@export var road_tile_length := 34.0
-@export var roundabout_tile_length := 20.0
-@export var route_length := 50
-
-@export_category("Turning")
+@export var chunk_count := 12
 @export_range(0.0, 1.0) var turn_chance := 0.5
-@export var turn_angle_degrees := 70.0
-
-@export_category("Streaming")
-@export var min_lookahead_distance := 60.0
-@export var lookahead_seconds := 3.0
-@export var despawn_tiles_behind := false
-@export var despawn_behind_distance := 60.0
-@export var initial_tiles := 6
+@export var road_chunk_extent := 135.680158
+@export var roundabout_chunk_extent := 20.0
 
 @export_category("Lane Confinement")
 @export var confine_to_lane := true
@@ -31,10 +21,10 @@ signal route_generated
 var route_ready := false
 
 var _rng := RandomNumberGenerator.new()
-var _spawned: Array[Node3D] = []
-var _path_transforms: Array[Transform3D] = []
-var _path_is_roundabout: Array[bool] = []
-var _next_index := 0
+var _chunks: Array[Node3D] = []
+var _chunk_extents: Array[float] = []
+var _chunk_is_roundabout: Array[bool] = []
+var _path_points: PackedVector3Array = []
 var _car: CharacterBody3D
 
 func _ready():
@@ -49,94 +39,114 @@ func _ready():
 
 	var start_position: Vector3 = _car.global_position if _car else global_position
 	var start_yaw: float = _car.rotation.y if _car else 0.0
-	_precompute_route(start_position, start_yaw)
+	var entry_transform := Transform3D(Basis(Vector3.UP, start_yaw), start_position)
+
+	for i in chunk_count:
+		entry_transform = _spawn_chunk(entry_transform)
+
 	route_ready = true
 	route_generated.emit()
 
-	for i in initial_tiles:
-		_spawn_next_tile()
-
 func _physics_process(delta):
+	if not confine_to_lane:
+		return
 	if _car == null:
 		_car = get_tree().get_first_node_in_group("car")
 		return
-
-	var required_lookahead = max(min_lookahead_distance, _car.velocity.length() * lookahead_seconds)
-	while _next_index < _path_transforms.size() and _car.global_position.distance_to(_path_transforms[_next_index].origin) < required_lookahead:
-		_spawn_next_tile()
-
-	if despawn_tiles_behind:
-		while _spawned.size() > 0 and _car.global_position.distance_to(_spawned[0].global_position) > despawn_behind_distance:
-			_spawned.pop_front().queue_free()
-
-	if confine_to_lane:
-		_apply_lane_confinement(delta)
+	_apply_lane_confinement(delta)
 
 func get_transform_at_fraction(f: float) -> Transform3D:
-	if _path_transforms.is_empty():
+	if _chunks.is_empty():
 		return Transform3D.IDENTITY
-	var idx := clampi(int(f * (_path_transforms.size() - 1)), 0, _path_transforms.size() - 1)
-	return _path_transforms[idx]
+	var idx := clampi(int(f * (_chunks.size() - 1)), 0, _chunks.size() - 1)
+	return _chunks[idx].global_transform
 
 func get_path_points() -> PackedVector3Array:
-	var points := PackedVector3Array()
-	for t in _path_transforms:
-		points.append(t.origin)
-	return points
+	return _path_points
 
-func _precompute_route(start_position: Vector3, start_yaw: float):
-	_path_transforms.clear()
-	_path_is_roundabout.clear()
+func get_chunk_transforms() -> Array[Transform3D]:
+	var transforms: Array[Transform3D] = []
+	for chunk in _chunks:
+		transforms.append(chunk.global_transform)
+	return transforms
 
-	var cursor := start_position
-	var yaw := start_yaw
+func get_chunk_extents() -> Array[float]:
+	return _chunk_extents
 
-	for i in route_length:
-		var use_roundabout = roundabout_tile_scene != null and _rng.randf() < roundabout_chance
-		var tile_basis := Basis(Vector3.UP, yaw)
-		_path_transforms.append(Transform3D(tile_basis, cursor))
-		_path_is_roundabout.append(use_roundabout)
+func get_chunk_is_roundabout() -> Array[bool]:
+	return _chunk_is_roundabout
 
-		var length := roundabout_tile_length if use_roundabout else road_tile_length
-		cursor += tile_basis.x * length
-
-		if use_roundabout and _rng.randf() < turn_chance:
-			var turn_sign := 1.0 if _rng.randf() < 0.5 else -1.0
-			yaw += turn_sign * deg_to_rad(turn_angle_degrees)
-
-func _spawn_next_tile():
-	if _next_index >= _path_transforms.size():
-		return
-
-	var use_roundabout: bool = _path_is_roundabout[_next_index]
-	var scene := roundabout_tile_scene if use_roundabout else road_tile_scene
+func _spawn_chunk(entry_transform: Transform3D) -> Transform3D:
+	var use_roundabout = roundabout_chunk_scene != null and _rng.randf() < roundabout_chance
+	var scene := roundabout_chunk_scene if use_roundabout else road_chunk_scene
 	if scene == null:
-		scene = road_tile_scene if road_tile_scene != null else roundabout_tile_scene
+		scene = road_chunk_scene if road_chunk_scene != null else roundabout_chunk_scene
 	if scene == null:
-		return
+		return entry_transform
 
-	var tile := scene.instantiate()
-	add_child(tile)
-	tile.global_transform = _path_transforms[_next_index]
-	_spawned.append(tile)
-	_next_index += 1
+	var chunk := scene.instantiate()
+	add_child(chunk)
+	chunk.global_transform = entry_transform
+
+	_chunks.append(chunk)
+	_chunk_extents.append(roundabout_chunk_extent if use_roundabout else road_chunk_extent)
+	_chunk_is_roundabout.append(use_roundabout)
+	_path_points.append(entry_transform.origin)
+
+	var exits := chunk.get_node_or_null("Exits")
+	if exits == null or exits.get_child_count() == 0:
+		return entry_transform
+
+	var choices: Array = exits.get_children()
+	var chosen: Node3D
+
+	if choices.size() == 1:
+		chosen = choices[0]
+	else:
+		var straight: Node3D = exits.get_node_or_null("Front")
+		if straight == null:
+			straight = exits.get_node_or_null("Straight")
+
+		if straight != null and _rng.randf() >= turn_chance:
+			chosen = straight
+		else:
+			var turn_choices: Array = []
+			for m in choices:
+				if m != straight:
+					turn_choices.append(m)
+			if turn_choices.is_empty():
+				turn_choices = choices
+			chosen = turn_choices[_rng.randi_range(0, turn_choices.size() - 1)]
+
+	return chosen.global_transform
 
 func _apply_lane_confinement(delta):
-	if _spawned.is_empty():
+	if _chunks.is_empty():
 		return
 
-	var nearest: Node3D = _spawned[0]
-	var nearest_dist := _car.global_position.distance_to(nearest.global_position)
-	for tile in _spawned:
-		var d := _car.global_position.distance_to(tile.global_position)
-		if d < nearest_dist:
-			nearest = tile
-			nearest_dist = d
+	var best_dist := INF
+	var best_local := Vector3.ZERO
+	var best_chunk: Node3D = null
 
-	var inv_transform: Transform3D = nearest.global_transform.affine_inverse()
-	var local: Vector3 = inv_transform * _car.global_position
-	var clamped_z: float = clamp(local.z, -lane_half_width, lane_half_width)
-	if not is_equal_approx(clamped_z, local.z):
-		var corrected_local := Vector3(local.x, local.y, clamped_z)
-		var corrected_global: Vector3 = nearest.global_transform * corrected_local
+	for i in _chunks.size():
+		var chunk := _chunks[i]
+		var extent := _chunk_extents[i]
+		var inv_transform: Transform3D = chunk.global_transform.affine_inverse()
+		var local: Vector3 = inv_transform * _car.global_position
+		var clamped_x: float = clamp(local.x, 0.0, extent)
+		var closest_local := Vector3(clamped_x, 0.0, 0.0)
+		var closest_global: Vector3 = chunk.global_transform * closest_local
+		var d := _car.global_position.distance_to(closest_global)
+		if d < best_dist:
+			best_dist = d
+			best_local = local
+			best_chunk = chunk
+
+	if best_chunk == null:
+		return
+
+	var clamped_z: float = clamp(best_local.z, -lane_half_width, lane_half_width)
+	if not is_equal_approx(clamped_z, best_local.z):
+		var corrected_local := Vector3(best_local.x, best_local.y, clamped_z)
+		var corrected_global: Vector3 = best_chunk.global_transform * corrected_local
 		_car.global_position = _car.global_position.lerp(corrected_global, clamp(lane_correction_speed * delta, 0.0, 1.0))
