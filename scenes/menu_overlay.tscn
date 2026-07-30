@@ -1,119 +1,155 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene format=3 uid="uid://kym70tle1o4p"]
 
-[ext_resource type="Script" path="res://scripts/menu_overlay.gd" id="1_script"]
-[ext_resource type="Shader" path="res://shaders/menu_retro.gdshader" id="2_shader"]
+[ext_resource type="Script" uid="uid://d1w7xnxgdqs6v" path="res://scripts/menu_overlay.gd" id="1_script"]
+[ext_resource type="Shader" uid="uid://blogtfjytvyi0" path="res://shaders/menu_retro.gdshader" id="2_shader"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_retro"]
 shader = ExtResource("2_shader")
+shader_parameter/color_top = Color(1, 0.85, 0.25, 1)
+shader_parameter/color_bottom = Color(0.75, 0.15, 0.05, 1)
+shader_parameter/glow_color = Color(1, 0.65, 0.15, 1)
+shader_parameter/tint_strength = 0.5
+shader_parameter/darken = 0.3
+shader_parameter/stripe_speed = 0.5
+shader_parameter/stripe_count = 20.0
+shader_parameter/stripe_intensity = 0.1
+shader_parameter/scanline_intensity = 0.12
+shader_parameter/scanline_count = 400.0
+shader_parameter/glow_strength = 0.45
+shader_parameter/vignette_strength = 1.1
 
-[node name="MenuOverlay" type="CanvasLayer"]
+[sub_resource type="LabelSettings" id="LabelSettings_0ld40"]
+font_size = 60
+font_color = Color(1, 0.7921569, 1, 1)
+
+[node name="MenuOverlay" type="CanvasLayer" unique_id=1238285956]
 layer = 20
 script = ExtResource("1_script")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="BackBufferCopy" type="BackBufferCopy" parent="." unique_id=801779431]
+copy_mode = 2
+
+[node name="Background" type="ColorRect" parent="." unique_id=1892675186]
 material = SubResource("ShaderMaterial_retro")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 
-[node name="MainPanel" type="CenterContainer" parent="."]
+[node name="MainPanel" type="CenterContainer" parent="." unique_id=1908534788]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MainPanel"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MainPanel" unique_id=602687754]
+layout_mode = 2
 theme_override_constants/separation = 18
 alignment = 1
 
-[node name="Title" type="Label" parent="MainPanel/VBoxContainer"]
+[node name="Title" type="Label" parent="MainPanel/VBoxContainer" unique_id=1140564380]
+layout_mode = 2
 theme_override_font_sizes/font_size = 56
-horizontal_alignment = 1
 text = "UBER YEETS"
+label_settings = SubResource("LabelSettings_0ld40")
+horizontal_alignment = 1
 
-[node name="PlayButton" type="Button" parent="MainPanel/VBoxContainer"]
+[node name="PlayButton" type="Button" parent="MainPanel/VBoxContainer" unique_id=630049533]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(220, 50)
+layout_mode = 2
 theme_override_font_sizes/font_size = 26
 text = "PLAY"
 
-[node name="MainCreditsButton" type="Button" parent="MainPanel/VBoxContainer"]
+[node name="MainCreditsButton" type="Button" parent="MainPanel/VBoxContainer" unique_id=403445492]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(220, 50)
+layout_mode = 2
 theme_override_font_sizes/font_size = 26
 text = "CREDITS"
 
-[node name="MainExitButton" type="Button" parent="MainPanel/VBoxContainer"]
+[node name="MainExitButton" type="Button" parent="MainPanel/VBoxContainer" unique_id=556814453]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(220, 50)
+layout_mode = 2
 theme_override_font_sizes/font_size = 26
 text = "EXIT"
 
-[node name="PausePanel" type="CenterContainer" parent="."]
+[node name="PausePanel" type="CenterContainer" parent="." unique_id=222509456]
 visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PausePanel"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PausePanel" unique_id=1321807950]
+layout_mode = 2
 theme_override_constants/separation = 18
 alignment = 1
 
-[node name="Title" type="Label" parent="PausePanel/VBoxContainer"]
+[node name="Title" type="Label" parent="PausePanel/VBoxContainer" unique_id=1175661369]
+layout_mode = 2
 theme_override_font_sizes/font_size = 48
-horizontal_alignment = 1
 text = "PAUSED"
+horizontal_alignment = 1
 
-[node name="ResumeButton" type="Button" parent="PausePanel/VBoxContainer"]
+[node name="ResumeButton" type="Button" parent="PausePanel/VBoxContainer" unique_id=329263652]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(220, 50)
+layout_mode = 2
 theme_override_font_sizes/font_size = 26
 text = "RESUME"
 
-[node name="PauseCreditsButton" type="Button" parent="PausePanel/VBoxContainer"]
+[node name="PauseCreditsButton" type="Button" parent="PausePanel/VBoxContainer" unique_id=781005783]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(220, 50)
+layout_mode = 2
 theme_override_font_sizes/font_size = 26
 text = "CREDITS"
 
-[node name="PauseExitButton" type="Button" parent="PausePanel/VBoxContainer"]
+[node name="PauseExitButton" type="Button" parent="PausePanel/VBoxContainer" unique_id=2082230206]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(220, 50)
+layout_mode = 2
 theme_override_font_sizes/font_size = 26
 text = "EXIT"
 
-[node name="CreditsPanel" type="CenterContainer" parent="."]
+[node name="CreditsPanel" type="CenterContainer" parent="." unique_id=1874161508]
 visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CreditsPanel"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CreditsPanel" unique_id=2042525119]
+layout_mode = 2
 theme_override_constants/separation = 14
 alignment = 1
 
-[node name="Title" type="Label" parent="CreditsPanel/VBoxContainer"]
+[node name="Title" type="Label" parent="CreditsPanel/VBoxContainer" unique_id=399226688]
+layout_mode = 2
 theme_override_font_sizes/font_size = 48
-horizontal_alignment = 1
 text = "CREDITS"
-
-[node name="Name1" type="Label" parent="CreditsPanel/VBoxContainer"]
-theme_override_font_sizes/font_size = 32
 horizontal_alignment = 1
+
+[node name="Name1" type="Label" parent="CreditsPanel/VBoxContainer" unique_id=1415999518]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
 text = "Raven"
+horizontal_alignment = 1
 
-[node name="Ampersand" type="Label" parent="CreditsPanel/VBoxContainer"]
+[node name="Ampersand" type="Label" parent="CreditsPanel/VBoxContainer" unique_id=1547009613]
+layout_mode = 2
 theme_override_font_sizes/font_size = 28
-horizontal_alignment = 1
 text = "&"
-
-[node name="Name2" type="Label" parent="CreditsPanel/VBoxContainer"]
-theme_override_font_sizes/font_size = 32
 horizontal_alignment = 1
-text = "DBAC"
 
-[node name="BackButton" type="Button" parent="CreditsPanel/VBoxContainer"]
+[node name="Name2" type="Label" parent="CreditsPanel/VBoxContainer" unique_id=1171141504]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "DBAC"
+horizontal_alignment = 1
+
+[node name="BackButton" type="Button" parent="CreditsPanel/VBoxContainer" unique_id=2057665212]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(220, 50)
+layout_mode = 2
 theme_override_font_sizes/font_size = 26
 text = "BACK"

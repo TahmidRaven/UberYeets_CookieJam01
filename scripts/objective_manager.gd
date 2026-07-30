@@ -13,7 +13,7 @@ extends Node
 @export_range(0.0, 0.5) var road_edge_margin := 0.25
 
 @export_category("Messages")
-@export var first_pickup_text := "Brakes are failing! Press E at the pickup to grab your fare (1/%d)."
+@export var first_pickup_text := "Looks like the brakes aren't working... but you've got a pickup! Press E to grab it (1/%d)."
 @export var dropoff_prompt_text := "Press E to YEET them out!"
 @export var round_complete_text := "Delivered! (%d/%d) Brakes hold for %ds, then Space guns it again."
 @export var all_done_text := "All %d deliveries complete!"
@@ -27,6 +27,7 @@ var _road_min_x: Array[float] = []
 var _road_extents: Array[float] = []
 var _landmark_points: Array[Vector3] = []
 var _rng := RandomNumberGenerator.new()
+var _route_ready := false
 
 func _ready():
 	if rng_seed != 0:
@@ -39,13 +40,13 @@ func _ready():
 	_track_generator = get_node_or_null(track_generator_path)
 
 	if _pickup:
-		_pickup.visible = false
-		_pickup.monitoring = false
+		_pickup.set_active(false)
 		_pickup.triggered.connect(_on_pickup_triggered)
 	if _dropoff:
-		_dropoff.visible = false
-		_dropoff.monitoring = false
+		_dropoff.set_active(false)
 		_dropoff.triggered.connect(_on_dropoff_triggered)
+
+	GameManager.game_started.connect(_on_game_started)
 
 	if _track_generator:
 		if _track_generator.route_ready:
@@ -57,6 +58,15 @@ func _on_route_generated():
 	_cache_road_segments()
 	_pick_fixed_positions()
 	_round = 0
+	_route_ready = true
+	if GameManager.is_started():
+		_begin_first_round()
+
+func _on_game_started():
+	if _route_ready:
+		_begin_first_round()
+
+func _begin_first_round():
 	_start_round()
 	GameManager.message_changed.emit(first_pickup_text % round_count)
 
@@ -106,11 +116,9 @@ func _start_round():
 	_round += 1
 
 	if _pickup:
-		_pickup.visible = true
-		_pickup.monitoring = true
+		_pickup.set_active(true)
 	if _dropoff:
-		_dropoff.visible = false
-		_dropoff.monitoring = false
+		_dropoff.set_active(false)
 
 func _point_on_chunk(index: int) -> Transform3D:
 	var frac := _rng.randf_range(road_edge_margin, 1.0 - road_edge_margin)
@@ -121,17 +129,14 @@ func _point_on_chunk(index: int) -> Transform3D:
 
 func _on_pickup_triggered(_point):
 	if _pickup:
-		_pickup.visible = false
-		_pickup.monitoring = false
+		_pickup.set_active(false)
 	if _dropoff:
-		_dropoff.visible = true
-		_dropoff.monitoring = true
+		_dropoff.set_active(true)
 	GameManager.message_changed.emit(dropoff_prompt_text)
 
 func _on_dropoff_triggered(_point):
 	if _dropoff:
-		_dropoff.visible = false
-		_dropoff.monitoring = false
+		_dropoff.set_active(false)
 
 	if _round >= round_count:
 		GameManager.set_brakes_permanently_working()

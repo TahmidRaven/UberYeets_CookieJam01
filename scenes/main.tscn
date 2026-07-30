@@ -18,7 +18,7 @@
 [ext_resource type="PackedScene" uid="uid://ctaxtufrc2u6c" path="res://models_environment/skybox.glb" id="16_skybox"]
 [ext_resource type="PackedScene" uid="uid://u8t5i51xtlf" path="res://models_environment/sun.glb" id="17_sun"]
 [ext_resource type="Script" uid="uid://byowanjasbx08" path="res://scripts/sky_follow.gd" id="18_skyfollow"]
-[ext_resource type="PackedScene" path="res://scenes/menu_overlay.tscn" id="19_menu"]
+[ext_resource type="PackedScene" uid="uid://kym70tle1o4p" path="res://scenes/menu_overlay.tscn" id="19_menu"]
 
 [sub_resource type="Environment" id="Environment_1"]
 ambient_light_source = 2

@@ -14,24 +14,35 @@ const MeshUtils = preload("res://scripts/mesh_utils.gd")
 signal triggered(point)
 
 var _car_inside := false
+var _beacon: MeshInstance3D
 
 func _ready():
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
 
-	var beacon = get_node_or_null("Beacon")
-	if beacon is MeshInstance3D:
+	_beacon = get_node_or_null("Beacon")
+	if _beacon:
 		var mat := StandardMaterial3D.new()
 		mat.albedo_color = beacon_color
 		mat.emission_enabled = true
 		mat.emission = beacon_color
-		beacon.material_override = mat
+		_beacon.material_override = mat
 
 	if building_scene:
 		_spawn_building_landmark()
 
-# The landmark rides along as a child, so it reappears beside the road
-# wherever the route places this pickup/dropoff each round.
+	set_active(false)
+
+# Only the beacon pole and the trigger area toggle - the node itself (and the
+# landmark building riding along as its child) always stays visible, so the
+# restaurant doesn't visibly vanish/reappear when a delivery completes.
+func set_active(active: bool):
+	monitoring = active
+	if _beacon:
+		_beacon.visible = active
+
+# The landmark rides along as a child so it sits beside the road wherever
+# this pickup/dropoff ends up once placed.
 func _spawn_building_landmark():
 	var instance: Node3D = building_scene.instantiate()
 	add_child(instance)

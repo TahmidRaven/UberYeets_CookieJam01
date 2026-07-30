@@ -39,8 +39,12 @@ func _unhandled_input(event):
 		return
 	get_viewport().set_input_as_handled()
 
+# Play only dismisses the menu - the car itself stays put (GameManager forces
+# auto_accelerate off) until the player actually presses W, which is when
+# GameManager.start_game() fires.
 func _on_play_pressed():
 	_enter_state(State.HIDDEN)
+	GameManager.show_start_prompt()
 
 func _on_resume_pressed():
 	_enter_state(State.HIDDEN)
