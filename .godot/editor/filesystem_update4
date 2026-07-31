@@ -1,8 +1,0 @@
-res://scenes/main.tscn
-res://scenes/menu_overlay.tscn
-res://prefabs/roundabout_tile.tscn
-res://scripts/car.gd
-res://scripts/minimap.gd
-res://scripts/game_manager.gd
-res://scripts/objective_manager.gd
-res://scenes/car.tscn
