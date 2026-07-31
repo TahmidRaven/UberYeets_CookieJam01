@@ -1,6 +1,6 @@
 [gd_scene format=4 uid="uid://bgdgou0fo0pcc"]
 
-[ext_resource type="Material" uid="uid://d2jsqlr3nhlif" path="res://marker_shader_mat.tres" id="1_f37rb"]
+[ext_resource type="Material" uid="uid://d2jsqlr3nhlif" path="res://models/marker/marker_shader_mat.tres" id="1_f37rb"]
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_8k5ml"]
 _surfaces = [{
@@ -35,6 +35,7 @@ blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_8k5ml")
 
 [node name="Marker" type="Node3D" unique_id=1037166737]
+transform = Transform3D(0.45, 0, 0, 0, 0.45, 0, 0, 0, 0.45, 0, 0, 0)
 
 [node name="Circle2" type="MeshInstance3D" parent="." unique_id=31700821]
 transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0, 2.800089, -2.6725576)

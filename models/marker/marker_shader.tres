@@ -1,10 +1,7 @@
 [gd_resource type="VisualShader" format=3 uid="uid://dd7lar1b7cnhg"]
 
-[ext_resource type="Texture2D" uid="uid://c1kynmu5onqhv" path="res://linear_grad.png" id="1_8uu5t"]
-
 [sub_resource type="VisualShaderNodeTexture" id="VisualShaderNodeTexture_xi0ji"]
 expanded_output_ports = [0]
-texture = ExtResource("1_8uu5t")
 
 [sub_resource type="VisualShaderNodeInput" id="VisualShaderNodeInput_sp2vq"]
 input_name = "screen_uv"

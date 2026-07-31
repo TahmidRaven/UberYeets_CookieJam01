@@ -1,8 +1,8 @@
 [gd_resource type="ShaderMaterial" format=3 uid="uid://d2jsqlr3nhlif"]
 
-[ext_resource type="Shader" uid="uid://dd7lar1b7cnhg" path="res://marker_shader.tres" id="1_p8frb"]
+[ext_resource type="Shader" uid="uid://dd7lar1b7cnhg" path="res://models/marker/marker_shader.tres" id="1_p8frb"]
 
 [resource]
 render_priority = 0
 shader = ExtResource("1_p8frb")
-shader_parameter/ColorParameter = Color(0, 1, 0, 1)
+shader_parameter/ColorParameter = Color(0, 1, 0, 0.5764706)
