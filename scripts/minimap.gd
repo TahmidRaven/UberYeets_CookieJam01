@@ -16,6 +16,11 @@ extends Control
 @export var dropoff_color := Color(1, 0.6, 0.1, 1)
 @export var marker_radius := 5.0
 
+@export_category("Marker Pulse")
+@export var pulse_min_scale := 1.0
+@export var pulse_max_scale := 1.15
+@export var pulse_speed := 3.0
+
 var _car: Node3D
 var _track_generator: Node3D
 var _pickups: Array[Node3D] = []
@@ -27,6 +32,8 @@ var _world_min := Vector2.ZERO
 var _world_scale := 1.0
 
 func _ready():
+	clip_contents = true
+
 	_car = get_node_or_null(car_path)
 	_track_generator = get_node_or_null(track_generator_path)
 
@@ -78,8 +85,17 @@ func _world_to_local(world_pos: Vector3) -> Vector2:
 func _process(_delta):
 	queue_redraw()
 
+# A slow 1.0x-1.15x "beep" so the car and objective markers stay noticeable
+# without permanently taking up extra space.
+func _pulse_scale() -> float:
+	var t := Time.get_ticks_msec() / 1000.0
+	var wave := (sin(t * pulse_speed) + 1.0) / 2.0
+	return lerp(pulse_min_scale, pulse_max_scale, wave)
+
 func _draw():
 	draw_rect(Rect2(Vector2.ZERO, size), background_color)
+
+	var pulse := _pulse_scale()
 
 	for edge in _edges:
 		var a: Vector3 = edge["a"]
@@ -91,17 +107,17 @@ func _draw():
 
 	for pickup in _pickups:
 		if is_instance_valid(pickup) and pickup.monitoring:
-			draw_circle(_world_to_local(pickup.global_position), marker_radius, pickup_color)
+			draw_circle(_world_to_local(pickup.global_position), marker_radius * pulse, pickup_color)
 
 	for dropoff in _dropoffs:
 		if is_instance_valid(dropoff) and dropoff.monitoring:
-			draw_circle(_world_to_local(dropoff.global_position), marker_radius, dropoff_color)
+			draw_circle(_world_to_local(dropoff.global_position), marker_radius * pulse, dropoff_color)
 
 	if _car and is_instance_valid(_car):
 		var pos := _world_to_local(_car.global_position)
 		var yaw: float = _car.rotation.y
 		# matches Basis(Vector3.UP, yaw).x, the car's actual forward direction
-		var forward := Vector2(cos(yaw), -sin(yaw)) * player_marker_size
+		var forward := Vector2(cos(yaw), -sin(yaw)) * player_marker_size * pulse
 		var side := forward.orthogonal() * 0.5
 		var points := PackedVector2Array([pos + forward, pos - forward + side, pos - forward - side])
 		draw_colored_polygon(points, player_color)

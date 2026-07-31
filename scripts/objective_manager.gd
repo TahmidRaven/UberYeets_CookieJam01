@@ -8,6 +8,7 @@ extends Node
 @export var round_count := 5
 @export var rng_seed := 0
 @export var brake_working_duration := 3.0
+@export var delivery_time_limit := 30.0
 
 @export_category("Placement")
 @export_range(0.0, 0.5) var road_edge_margin := 0.25
@@ -17,6 +18,7 @@ extends Node
 @export var first_pickup_text := "Looks like the brakes aren't working... but you've got a pickup! Press E to grab it (0/%d)."
 @export var dropoff_prompt_text := "Press E to YEET them out!"
 @export var round_complete_text := "Delivered! (%d/%d) Brakes hold for %ds"
+@export var late_delivery_suffix := " - Late delivery!"
 @export var all_done_text := "All %d deliveries complete!"
 
 var _pickups: Array[Area3D] = []
@@ -29,6 +31,8 @@ var _road_extents: Array[float] = []
 var _landmark_points: Array[Vector3] = []
 var _rng := RandomNumberGenerator.new()
 var _route_ready := false
+var _round_start_time := 0.0
+var _round_active := false
 
 func _ready():
 	if rng_seed != 0:
@@ -145,12 +149,27 @@ func _pick_spaced_point(existing: Array[Vector3]) -> Transform3D:
 func get_landmark_points() -> Array[Vector3]:
 	return _landmark_points
 
+func is_round_active() -> bool:
+	return _round_active
+
+func get_time_remaining() -> float:
+	if not _round_active:
+		return delivery_time_limit
+	var elapsed := Time.get_ticks_msec() / 1000.0 - _round_start_time
+	return max(delivery_time_limit - elapsed, 0.0)
+
+func _is_delivery_late() -> bool:
+	var elapsed := Time.get_ticks_msec() / 1000.0 - _round_start_time
+	return elapsed > delivery_time_limit
+
 func _start_round():
 	if _pickups.is_empty() or _dropoffs.is_empty():
 		return
 
 	_pickups[_round].set_active(true)
 	_dropoffs[_round].set_active(false)
+	_round_start_time = Time.get_ticks_msec() / 1000.0
+	_round_active = true
 	AudioManager.play_accelerate()
 
 func _point_on_chunk(index: int) -> Transform3D:
@@ -168,14 +187,22 @@ func _on_pickup_triggered(_point):
 
 func _on_dropoff_triggered(_point):
 	_dropoffs[_round].set_active(false)
+	var late := _is_delivery_late()
+	_round_active = false
 
 	if _round >= round_count - 1:
 		GameManager.set_brakes_permanently_working()
-		GameManager.message_changed.emit(all_done_text % round_count)
+		var text: String = all_done_text % round_count
+		if late:
+			text += late_delivery_suffix
+		GameManager.message_changed.emit(text)
 		AudioManager.play_delivered()
 	else:
 		GameManager.start_temporary_brakes(brake_working_duration)
-		GameManager.message_changed.emit(round_complete_text % [_round + 1, round_count, int(brake_working_duration)])
+		var text: String = round_complete_text % [_round + 1, round_count, int(brake_working_duration)]
+		if late:
+			text += late_delivery_suffix
+		GameManager.message_changed.emit(text)
 		AudioManager.play_delivered_then_next_order()
 		_round += 1
 		_start_round()

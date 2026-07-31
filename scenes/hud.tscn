@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://scripts/hud.gd" id="1_script"]
 [ext_resource type="Script" path="res://scripts/minimap.gd" id="2_minimap"]
+[ext_resource type="Script" path="res://scripts/delivery_timer_display.gd" id="3_timer"]
 
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource("1_script")
@@ -38,3 +39,20 @@ car_path = NodePath("../../Car")
 track_generator_path = NodePath("../../TrackGenerator")
 pickup_points_path = NodePath("../../PickupPoints")
 dropoff_points_path = NodePath("../../DropoffPoints")
+
+[node name="DeliveryTimer" type="Label" parent="."]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 0.0
+offset_left = -240.0
+offset_top = 228.0
+offset_right = -20.0
+offset_bottom = 264.0
+grow_horizontal = 0
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+text = ""
+script = ExtResource("3_timer")
+objective_manager_path = NodePath("../../ObjectiveManager")

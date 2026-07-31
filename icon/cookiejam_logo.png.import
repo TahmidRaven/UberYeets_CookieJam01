@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://xj56awp68dqy"
-path="res://.godot/imported/index.png-917645f878b7eae3bd8162743181f2e0.ctex"
+uid="uid://c1xcbooruoc8j"
+path="res://.godot/imported/cookiejam_logo.png-26914026f0c8459399a5b6b0ebcf809a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://builds/index.png"
-dest_files=["res://.godot/imported/index.png-917645f878b7eae3bd8162743181f2e0.ctex"]
+source_file="res://icon/cookiejam_logo.png"
+dest_files=["res://.godot/imported/cookiejam_logo.png-26914026f0c8459399a5b6b0ebcf809a.ctex"]
 
 [params]
 

@@ -45,9 +45,14 @@ func _physics_process(delta):
 
 	var steer = Input.get_axis("turn_right","turn_left")
 
-	var effective_max_speed = lerp(max_speed, max_speed * turn_speed_factor, absf(steer))
-	if velocity.length() > effective_max_speed:
-		velocity = velocity.move_toward(Vector3.ZERO, turn_brake_strength * delta)
+	# This cornering brake only makes sense for taking a turn too fast going
+	# forward - it doesn't know forward from reverse, so applied while
+	# reversing it just fights/cancels the reverse thrust the instant you
+	# steer at all. Skip it while reverse is held.
+	if not Input.is_action_pressed("reverse"):
+		var effective_max_speed = lerp(max_speed, max_speed * turn_speed_factor, absf(steer))
+		if velocity.length() > effective_max_speed:
+			velocity = velocity.move_toward(Vector3.ZERO, turn_brake_strength * delta)
 	if velocity.length() > max_speed:
 		velocity = velocity.normalized() * max_speed
 

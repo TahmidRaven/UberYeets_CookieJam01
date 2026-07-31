@@ -1,2 +1,4 @@
+res://scripts/minimap.gd
+res://models/marker/marker.tscn
+res://models/marker/marker_shader.tres
 res://scripts/objective_manager.gd
-res://scripts/objective_point.gd

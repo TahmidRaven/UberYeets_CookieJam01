@@ -10,6 +10,7 @@ const MeshUtils = preload("res://scripts/mesh_utils.gd")
 @export var confine_to_lane := true
 @export var lane_half_width := 8.0
 @export var lane_correction_speed := 10.0
+@export var off_map_distance := 80.0
 
 @export var car_path: NodePath
 
@@ -198,6 +199,7 @@ func _apply_lane_confinement(delta):
 
 	var best_dist := INF
 	var best_local := Vector3.ZERO
+	var best_closest_global := Vector3.ZERO
 	var best_chunk: Node3D = null
 	var best_is_intersection := false
 
@@ -214,10 +216,22 @@ func _apply_lane_confinement(delta):
 		if d < best_dist:
 			best_dist = d
 			best_local = local
+			best_closest_global = closest_global
 			best_chunk = chunk
 			best_is_intersection = _chunk_is_intersection[i]
 
-	if best_chunk == null or best_is_intersection:
+	if best_chunk == null:
+		return
+
+	# Way off the road network entirely (e.g. rammed through a curb at speed)
+	# - snap back onto the nearest point on the road rather than trying to
+	# softly lerp back from arbitrarily far away.
+	if best_dist > off_map_distance:
+		_car.global_position = best_closest_global
+		_car.velocity = Vector3.ZERO
+		return
+
+	if best_is_intersection:
 		return
 
 	var clamped_z: float = clamp(best_local.z, -lane_half_width, lane_half_width)
