@@ -1,8 +1,11 @@
 res://prefabs/objective_point.tscn::84d0e3adcd2cff51a739b3106a208fe0::1785360258::res://.godot/exported/133200997/export-6d2d3f3906848dcab7502c24662dbb33-objective_point.scn
-res://prefabs/roundabout_tile.tscn::44a47ff101791feb3885c0865af56b63::1785427899::res://.godot/exported/133200997/export-6c491c91d3f0226558ba25a04c3d1300-roundabout_tile.scn
-res://scenes/car.tscn::965425fa6fa771427054614515bd96d4::1785362446::res://.godot/exported/133200997/export-1ca24e52cc6a83290e0baa7a560e4f76-car.scn
-res://scenes/hud.tscn::51c15578d468c54d45ea3caa580fdcf6::1785433759::res://.godot/exported/133200997/export-38bf74ff262409a94a41206b2b776d33-hud.scn
-res://scenes/main.tscn::9518dd8cee9600ede1c1f53d551e81d4::1785434309::res://.godot/exported/133200997/export-3ad5c15c4f3250da0cc7c1af1770d85f-main.scn
+res://prefabs/roundabout_tile.tscn::bea98d2cc903a4ae2fad4263fc7fe06b::1785453638::res://.godot/exported/133200997/export-6c491c91d3f0226558ba25a04c3d1300-roundabout_tile.scn
+res://scenes/car.tscn::fba0a0e4daa17b6099647d0c67b9b634::1785456087::res://.godot/exported/133200997/export-1ca24e52cc6a83290e0baa7a560e4f76-car.scn
+res://scenes/hud.tscn::9dbafae0de646bb5699b4816193c7596::1785445737::res://.godot/exported/133200997/export-38bf74ff262409a94a41206b2b776d33-hud.scn
+res://scenes/main.tscn::cccbddbaefa62b025f34300368282d09::1785457498::res://.godot/exported/133200997/export-3ad5c15c4f3250da0cc7c1af1770d85f-main.scn
 res://scenes/road.tscn::b847af23a49e873e93d7777f76863da7::1785429034::res://.godot/exported/133200997/export-041d9cbadd562efa0088c822e4741668-road.scn
 res://scenes/roadRoundabout.tscn::2a0ac0898f9bc35b5fb6f0d2d28eb4fe::1785408680::res://.godot/exported/133200997/export-c0369c4650daaadb2f3ac7fb5816f446-roadRoundabout.scn
-res://scenes/crt_overlay.tscn::f1560838c35b8b645dabf143c94aad82::1785434067::res://.godot/exported/133200997/export-2d89c098b3c5528a8ac199e0a9441170-crt_overlay.scn
+res://scenes/crt_overlay.tscn::977e4239029546ebbf14acfc1c9ddbea::1785434728::res://.godot/exported/133200997/export-2d89c098b3c5528a8ac199e0a9441170-crt_overlay.scn
+res://scenes/menu_overlay.tscn::7ef0cd4acae3a9f388d64f78f6fcae94::1785455135::res://.godot/exported/133200997/export-46e544b1cfbce408b4c5babaf315a0e8-menu_overlay.scn
+res://theme.tres::07c8d3729ef622bf77573504aa0a0090::1785445109::res://.godot/exported/133200997/export-1b11a992ebcc6f262e4ee4a4db300a0d-theme.res
+res://scenes/impact_flash.tscn::35c5b84c3eb633a833319e1792305e39::1785456222::res://.godot/exported/133200997/export-8a748fd358bd13f8181ab57453fa4fbe-impact_flash.scn

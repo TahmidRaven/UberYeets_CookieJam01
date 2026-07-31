@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://k61q5aakhwlu" path="res://scripts/car.gd" id="1_qt2eu"]
 [ext_resource type="PackedScene" uid="uid://beh003jegkyba" path="res://models/car/car.glb" id="2_50v30"]
+[ext_resource type="Script" path="res://scripts/camera_juice.gd" id="3_camjuice"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_qt2eu"]
 
@@ -21,3 +22,4 @@ transform = Transform3D(0.97093016, 0.23936306, 0, -0.23936306, 0.97093016, 0, 0
 [node name="Camera3D" type="Camera3D" parent="CameraPivot" unique_id=352814398]
 transform = Transform3D(0.013688491, 0.07560806, -0.99704355, -0.0010379311, 0.99713755, 0.07560091, 0.99990577, 0, 0.013727787, 0, 0, 0)
 current = true
+script = ExtResource("3_camjuice")

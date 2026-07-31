@@ -5,3 +5,4 @@ res://scripts/car.gd
 res://scripts/minimap.gd
 res://scripts/game_manager.gd
 res://scripts/objective_manager.gd
+res://scenes/car.tscn

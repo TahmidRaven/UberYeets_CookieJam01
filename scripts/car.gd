@@ -16,7 +16,12 @@ extends CharacterBody3D
 @export_range(0.0, 1.0) var turn_speed_factor := 0.4
 @export var turn_brake_strength := 40.0
 
+@export_category("Impacts")
+@export var min_impact_speed := 4.0
+@export var bounce_factor := 0.5
+
 signal panic_pressed
+signal collided(impact_speed: float, impact_position: Vector3)
 
 func _ready():
 	add_to_group("car")
@@ -50,4 +55,30 @@ func _physics_process(delta):
 
 	velocity = velocity.move_toward(Vector3.ZERO, friction * delta)
 
+	var pre_collision_velocity := velocity
 	move_and_slide()
+	_handle_impacts(pre_collision_velocity)
+
+	# This car never leaves the ground plane - no gravity is applied anywhere
+	# above, so any stray vertical velocity (e.g. from clipping the top edge
+	# of a curb at an angle) would otherwise accumulate forever with nothing
+	# to pull it back down.
+	velocity.y = 0.0
+	global_position.y = 0.0
+
+# move_and_slide() already strips the into-wall component of velocity so the
+# car doesn't get stuck, so impact strength has to be measured from the
+# velocity we were carrying right before it - a real bounce-back is then
+# added on top so a hard hit actually reads as a thud, not just a stop.
+func _handle_impacts(pre_collision_velocity: Vector3):
+	for i in get_slide_collision_count():
+		var collision := get_slide_collision(i)
+		var normal := collision.get_normal()
+		normal.y = 0.0
+		if normal.length_squared() < 0.0001:
+			continue
+		normal = normal.normalized()
+		var impact_speed := -pre_collision_velocity.dot(normal)
+		if impact_speed > min_impact_speed:
+			velocity += normal * impact_speed * bounce_factor
+			collided.emit(impact_speed, collision.get_position())
