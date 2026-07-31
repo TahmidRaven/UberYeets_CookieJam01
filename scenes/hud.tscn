@@ -36,5 +36,5 @@ grow_vertical = 1
 script = ExtResource("2_minimap")
 car_path = NodePath("../../Car")
 track_generator_path = NodePath("../../TrackGenerator")
-pickup_point_path = NodePath("../../PickupPoint")
-dropoff_point_path = NodePath("../../DropoffPoint")
+pickup_points_path = NodePath("../../PickupPoints")
+dropoff_points_path = NodePath("../../DropoffPoints")

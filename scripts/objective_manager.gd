@@ -1,7 +1,7 @@
 extends Node
 
-@export var pickup_point: NodePath
-@export var dropoff_point: NodePath
+@export var pickup_points_path: NodePath
+@export var dropoff_points_path: NodePath
 @export var track_generator_path: NodePath
 
 @export_category("Rounds")
@@ -11,15 +11,16 @@ extends Node
 
 @export_category("Placement")
 @export_range(0.0, 0.5) var road_edge_margin := 0.25
+@export var min_point_spacing := 40.0
 
 @export_category("Messages")
-@export var first_pickup_text := "Looks like the brakes aren't working... but you've got a pickup! Press E to grab it (1/%d)."
+@export var first_pickup_text := "Looks like the brakes aren't working... but you've got a pickup! Press E to grab it (0/%d)."
 @export var dropoff_prompt_text := "Press E to YEET them out!"
 @export var round_complete_text := "Delivered! (%d/%d) Brakes hold for %ds"
 @export var all_done_text := "All %d deliveries complete!"
 
-var _pickup: Area3D
-var _dropoff: Area3D
+var _pickups: Array[Area3D] = []
+var _dropoffs: Array[Area3D] = []
 var _track_generator: Node3D
 var _round := 0
 var _road_transforms: Array[Transform3D] = []
@@ -35,17 +36,23 @@ func _ready():
 	else:
 		_rng.randomize()
 
-	_pickup = get_node_or_null(pickup_point)
-	_dropoff = get_node_or_null(dropoff_point)
+	var pickup_container := get_node_or_null(pickup_points_path)
+	if pickup_container:
+		for child in pickup_container.get_children():
+			_pickups.append(child)
+	var dropoff_container := get_node_or_null(dropoff_points_path)
+	if dropoff_container:
+		for child in dropoff_container.get_children():
+			_dropoffs.append(child)
+
+	for pickup in _pickups:
+		pickup.set_active(false)
+		pickup.triggered.connect(_on_pickup_triggered)
+	for dropoff in _dropoffs:
+		dropoff.set_active(false)
+		dropoff.triggered.connect(_on_dropoff_triggered)
+
 	_track_generator = get_node_or_null(track_generator_path)
-
-	if _pickup:
-		_pickup.set_active(false)
-		_pickup.triggered.connect(_on_pickup_triggered)
-	if _dropoff:
-		_dropoff.set_active(false)
-		_dropoff.triggered.connect(_on_dropoff_triggered)
-
 	GameManager.game_started.connect(_on_game_started)
 
 	if _track_generator:
@@ -56,7 +63,7 @@ func _ready():
 
 func _on_route_generated():
 	_cache_road_segments()
-	_pick_fixed_positions()
+	_place_all_points()
 	_round = 0
 	_route_ready = true
 	if GameManager.is_started():
@@ -86,39 +93,65 @@ func _cache_road_segments():
 			_road_min_x.append(min_x[i])
 			_road_extents.append(extents[i])
 
-# Pickup/dropoff (and whatever landmark building rides along with each one)
-# are placed exactly once here and never moved again - rounds just shuttle
-# the player back and forth between these two fixed spots.
-func _pick_fixed_positions():
+# Every pickup/dropoff for the whole run (and whatever landmark building rides
+# along as each one's child) is placed exactly once here, before the player
+# ever presses W - the run's locations are decided upfront, not regenerated
+# round to round, and rounds just visit them in order.
+func _place_all_points():
 	_landmark_points.clear()
-	if _road_transforms.size() < 2:
+	if _road_transforms.is_empty():
 		return
 
-	var pickup_index := _rng.randi_range(0, _road_transforms.size() - 1)
-	var dropoff_index := pickup_index
-	while dropoff_index == pickup_index:
-		dropoff_index = _rng.randi_range(0, _road_transforms.size() - 1)
+	var count: int = min(_pickups.size(), _dropoffs.size(), round_count)
+	var chosen: Array[Vector3] = []
 
-	if _pickup:
-		_pickup.global_transform = _point_on_chunk(pickup_index)
-		_landmark_points.append(_pickup.global_position)
-	if _dropoff:
-		_dropoff.global_transform = _point_on_chunk(dropoff_index)
-		_landmark_points.append(_dropoff.global_position)
+	for i in count:
+		var pickup_transform := _pick_spaced_point(chosen)
+		chosen.append(pickup_transform.origin)
+		_pickups[i].global_transform = pickup_transform
+		_landmark_points.append(pickup_transform.origin)
+
+		var dropoff_transform := _pick_spaced_point(chosen)
+		chosen.append(dropoff_transform.origin)
+		_dropoffs[i].global_transform = dropoff_transform
+		_landmark_points.append(dropoff_transform.origin)
+
+# Picks a random road point, preferring one at least min_point_spacing away
+# from every point chosen so far so the run's 10 locations don't cluster on
+# top of each other; falls back to the best candidate found if none clear
+# that bar within a bounded number of tries.
+func _pick_spaced_point(existing: Array[Vector3]) -> Transform3D:
+	var best_transform := Transform3D()
+	var best_distance := -1.0
+
+	for _attempt in 30:
+		var index := _rng.randi_range(0, _road_transforms.size() - 1)
+		var candidate := _point_on_chunk(index)
+		if existing.is_empty():
+			return candidate
+
+		var closest := INF
+		for point in existing:
+			closest = min(closest, candidate.origin.distance_to(point))
+
+		if closest >= min_point_spacing:
+			return candidate
+		if closest > best_distance:
+			best_distance = closest
+			best_transform = candidate
+
+	return best_transform
 
 func get_landmark_points() -> Array[Vector3]:
 	return _landmark_points
 
 func _start_round():
-	if _road_transforms.size() < 2:
+	if _pickups.is_empty() or _dropoffs.is_empty():
 		return
 
-	_round += 1
-
-	if _pickup:
-		_pickup.set_active(true)
-	if _dropoff:
-		_dropoff.set_active(false)
+	_pickups[_round].set_active(true)
+	_dropoffs[_round].set_active(false)
+	AudioManager.play_accelerate()
 
 func _point_on_chunk(index: int) -> Transform3D:
 	var frac := _rng.randf_range(road_edge_margin, 1.0 - road_edge_margin)
@@ -128,20 +161,21 @@ func _point_on_chunk(index: int) -> Transform3D:
 	return Transform3D(chunk_transform.basis, world_pos)
 
 func _on_pickup_triggered(_point):
-	if _pickup:
-		_pickup.set_active(false)
-	if _dropoff:
-		_dropoff.set_active(true)
+	_pickups[_round].set_active(false)
+	_dropoffs[_round].set_active(true)
+	AudioManager.play_pickup()
 	GameManager.message_changed.emit(dropoff_prompt_text)
 
 func _on_dropoff_triggered(_point):
-	if _dropoff:
-		_dropoff.set_active(false)
+	_dropoffs[_round].set_active(false)
 
-	if _round >= round_count:
+	if _round >= round_count - 1:
 		GameManager.set_brakes_permanently_working()
 		GameManager.message_changed.emit(all_done_text % round_count)
+		AudioManager.play_delivered()
 	else:
 		GameManager.start_temporary_brakes(brake_working_duration)
-		GameManager.message_changed.emit(round_complete_text % [_round, round_count, int(brake_working_duration)])
+		GameManager.message_changed.emit(round_complete_text % [_round + 1, round_count, int(brake_working_duration)])
+		AudioManager.play_delivered_then_next_order()
+		_round += 1
 		_start_round()

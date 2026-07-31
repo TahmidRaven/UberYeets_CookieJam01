@@ -66,3 +66,8 @@ func _enter_state(new_state: State):
 	_main_panel.visible = new_state == State.MAIN
 	_pause_panel.visible = new_state == State.PAUSED
 	_credits_panel.visible = new_state == State.CREDITS
+
+	if new_state == State.HIDDEN:
+		AudioManager.resume_bgm()
+	else:
+		AudioManager.stop_bgm()

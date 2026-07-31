@@ -11,6 +11,9 @@ const MeshUtils = preload("res://scripts/mesh_utils.gd")
 @export var building_side_offset := 14.0
 @export var building_y_offset := 0.0
 
+@export_category("Dropoff Cutscene")
+@export var cutscene_duration := 1.0
+
 signal triggered(point)
 
 var _car_inside := false
@@ -65,26 +68,49 @@ func _setup_person():
 			idle.loop_mode = Animation.LOOP_LINEAR
 		_person_anim.play("idle_pepsima")
 
-# The marker ring toggles like the old beacon did. The person is more
-# particular: a waiting pickup fare should be standing there the whole time
-# it's active, but the dropoff should stay empty (they're riding in the car)
-# until the actual yeet - see _fire_triggered().
+	# Hidden until something explicitly shows it: set_active() for a waiting
+	# pickup fare, or _fire_triggered()'s reveal for the dropoff's yeet.
+	_person.visible = false
+
+# The marker ring toggles like the old beacon did. The pickup person mirrors
+# it (a waiting fare is visible the whole time it's active). The dropoff
+# person deliberately ignores this - it must stay hidden through every
+# set_active() call while waiting (including the one right after the yeet
+# that deactivates the trigger), only appearing via _fire_triggered().
 func set_active(active: bool):
 	monitoring = active
 	if _marker:
 		_marker.visible = active
-	if _person == null:
-		return
-	if kind == "Pickup":
+	if _person and kind == "Pickup":
 		_person.visible = active
-	elif active:
-		_person.visible = false
 
 func _fire_triggered():
 	if kind == "Dropoff" and _person and _person_anim:
 		_person.visible = true
 		_person_anim.play("gamejam_jump")
+		_play_dropoff_cutscene()
 	triggered.emit(self)
+
+# Cuts to a rear ("6 o'clock") view of the car riding along behind it for the
+# yeet, then cuts back. This dropoff point is only ever used for one round, so
+# freeing the person afterward is safe - it won't be needed again.
+func _play_dropoff_cutscene():
+	var car := get_tree().get_first_node_in_group("car")
+	if car == null:
+		return
+	var main_camera: Camera3D = car.get_node_or_null("CameraPivot/Camera3D")
+	var dropoff_camera: Camera3D = car.get_node_or_null("DropoffCamera")
+
+	if dropoff_camera:
+		dropoff_camera.current = true
+
+	await get_tree().create_timer(cutscene_duration).timeout
+
+	if main_camera:
+		main_camera.current = true
+	if _person:
+		_person.queue_free()
+		_person = null
 
 # The landmark rides along as a child so it sits beside the road wherever
 # this pickup/dropoff ends up once placed.

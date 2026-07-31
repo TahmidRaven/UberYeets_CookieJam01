@@ -2,8 +2,8 @@ extends Control
 
 @export var car_path: NodePath
 @export var track_generator_path: NodePath
-@export var pickup_point_path: NodePath
-@export var dropoff_point_path: NodePath
+@export var pickup_points_path: NodePath
+@export var dropoff_points_path: NodePath
 
 @export_category("Style")
 @export var map_padding := 12.0
@@ -18,8 +18,8 @@ extends Control
 
 var _car: Node3D
 var _track_generator: Node3D
-var _pickup: Node3D
-var _dropoff: Node3D
+var _pickups: Array[Node3D] = []
+var _dropoffs: Array[Node3D] = []
 
 var _edges: Array[Dictionary] = []
 var _node_positions: Array[Vector3] = []
@@ -29,8 +29,15 @@ var _world_scale := 1.0
 func _ready():
 	_car = get_node_or_null(car_path)
 	_track_generator = get_node_or_null(track_generator_path)
-	_pickup = get_node_or_null(pickup_point_path)
-	_dropoff = get_node_or_null(dropoff_point_path)
+
+	var pickup_container := get_node_or_null(pickup_points_path)
+	if pickup_container:
+		for child in pickup_container.get_children():
+			_pickups.append(child)
+	var dropoff_container := get_node_or_null(dropoff_points_path)
+	if dropoff_container:
+		for child in dropoff_container.get_children():
+			_dropoffs.append(child)
 
 	if _track_generator:
 		if _track_generator.route_ready:
@@ -82,11 +89,13 @@ func _draw():
 	for node_pos in _node_positions:
 		draw_circle(_world_to_local(node_pos), route_width * 1.5, route_color)
 
-	if _pickup and is_instance_valid(_pickup) and _pickup.monitoring:
-		draw_circle(_world_to_local(_pickup.global_position), marker_radius, pickup_color)
+	for pickup in _pickups:
+		if is_instance_valid(pickup) and pickup.monitoring:
+			draw_circle(_world_to_local(pickup.global_position), marker_radius, pickup_color)
 
-	if _dropoff and is_instance_valid(_dropoff) and _dropoff.monitoring:
-		draw_circle(_world_to_local(_dropoff.global_position), marker_radius, dropoff_color)
+	for dropoff in _dropoffs:
+		if is_instance_valid(dropoff) and dropoff.monitoring:
+			draw_circle(_world_to_local(dropoff.global_position), marker_radius, dropoff_color)
 
 	if _car and is_instance_valid(_car):
 		var pos := _world_to_local(_car.global_position)

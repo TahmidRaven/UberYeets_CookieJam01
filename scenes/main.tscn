@@ -76,8 +76,8 @@ east = NodePath("../I")
 
 [node name="ObjectiveManager" type="Node" parent="." unique_id=584910265]
 script = ExtResource("5_objmgr")
-pickup_point = NodePath("../PickupPoint")
-dropoff_point = NodePath("../DropoffPoint")
+pickup_points_path = NodePath("../PickupPoints")
+dropoff_points_path = NodePath("../DropoffPoints")
 track_generator_path = NodePath("../TrackGenerator")
 
 [node name="BuildingScatterer" type="Node3D" parent="." unique_id=471849217]
@@ -86,12 +86,60 @@ track_generator_path = NodePath("../TrackGenerator")
 objective_manager_path = NodePath("../ObjectiveManager")
 building_scenes = Array[PackedScene]([ExtResource("10_building1"), ExtResource("11_building2"), ExtResource("12_building3"), ExtResource("13_building4")])
 
-[node name="PickupPoint" parent="." unique_id=1744686692 instance=ExtResource("6_objpoint")]
+[node name="PickupPoints" type="Node3D" parent="."]
+
+[node name="Pickup0" parent="PickupPoints" instance=ExtResource("6_objpoint")]
 require_action = "yeet"
 beacon_color = Color(0.2, 1, 0.3, 1)
 building_scene = ExtResource("14_mc")
 
-[node name="DropoffPoint" parent="." unique_id=72744603 instance=ExtResource("6_objpoint")]
+[node name="Pickup1" parent="PickupPoints" instance=ExtResource("6_objpoint")]
+require_action = "yeet"
+beacon_color = Color(0.2, 1, 0.3, 1)
+building_scene = ExtResource("14_mc")
+
+[node name="Pickup2" parent="PickupPoints" instance=ExtResource("6_objpoint")]
+require_action = "yeet"
+beacon_color = Color(0.2, 1, 0.3, 1)
+building_scene = ExtResource("14_mc")
+
+[node name="Pickup3" parent="PickupPoints" instance=ExtResource("6_objpoint")]
+require_action = "yeet"
+beacon_color = Color(0.2, 1, 0.3, 1)
+building_scene = ExtResource("14_mc")
+
+[node name="Pickup4" parent="PickupPoints" instance=ExtResource("6_objpoint")]
+require_action = "yeet"
+beacon_color = Color(0.2, 1, 0.3, 1)
+building_scene = ExtResource("14_mc")
+
+[node name="DropoffPoints" type="Node3D" parent="."]
+
+[node name="Dropoff0" parent="DropoffPoints" instance=ExtResource("6_objpoint")]
+kind = "Dropoff"
+require_action = "yeet"
+beacon_color = Color(1, 0.6, 0.1, 1)
+building_scene = ExtResource("15_pizza")
+
+[node name="Dropoff1" parent="DropoffPoints" instance=ExtResource("6_objpoint")]
+kind = "Dropoff"
+require_action = "yeet"
+beacon_color = Color(1, 0.6, 0.1, 1)
+building_scene = ExtResource("15_pizza")
+
+[node name="Dropoff2" parent="DropoffPoints" instance=ExtResource("6_objpoint")]
+kind = "Dropoff"
+require_action = "yeet"
+beacon_color = Color(1, 0.6, 0.1, 1)
+building_scene = ExtResource("15_pizza")
+
+[node name="Dropoff3" parent="DropoffPoints" instance=ExtResource("6_objpoint")]
+kind = "Dropoff"
+require_action = "yeet"
+beacon_color = Color(1, 0.6, 0.1, 1)
+building_scene = ExtResource("15_pizza")
+
+[node name="Dropoff4" parent="DropoffPoints" instance=ExtResource("6_objpoint")]
 kind = "Dropoff"
 require_action = "yeet"
 beacon_color = Color(1, 0.6, 0.1, 1)

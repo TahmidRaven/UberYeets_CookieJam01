@@ -1,4 +1,2 @@
-res://models/marker/marker.tscn
-res://models/marker/marker_shader.tres
-res://models/person/person.tscn
-res://models/marker/marker_shader_mat.tres
+res://scripts/objective_manager.gd
+res://scripts/objective_point.gd
